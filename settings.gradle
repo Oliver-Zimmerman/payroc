@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Transaction Processor"
 include ':app'
+include ':transaction'
