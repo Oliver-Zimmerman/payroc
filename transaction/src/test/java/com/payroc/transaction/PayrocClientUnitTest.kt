@@ -9,9 +9,9 @@ import org.junit.Assert.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class PayrocClientUnitTest {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun start_transaction_and_read_card() {
+
     }
 }

@@ -5,7 +5,7 @@ import com.payroc.transaction.data.model.Order
 data class TransactionRequest(
     var channel: String = "POS",
     var terminal: String,
-    var order: Order = Order(),
+    var order: Order,
     var customerAccount: CustomerAccount,
 )
 

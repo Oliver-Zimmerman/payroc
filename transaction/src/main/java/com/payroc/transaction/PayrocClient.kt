@@ -1,14 +1,11 @@
 package com.payroc.transaction
 
 import android.util.Log
-import com.payroc.transaction.data.PayrocRepository
-import com.payroc.transaction.utility.createOrderID
+import com.payroc.transaction.data.model.response.TransactionResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class PayrocClient(private val terminal: String, private val apiKey: String) {
-
-    private val _repository: PayrocRepository = PayrocRepository.getInstance()
+class PayrocClient(private val terminal: String, private val apiKey: String) : TransactionListener {
 
     private val _stateFlow = MutableStateFlow(TransactionState.IDLE)
     val stateFlow = _stateFlow.asStateFlow()
@@ -19,21 +16,38 @@ class PayrocClient(private val terminal: String, private val apiKey: String) {
     private val _clientMessageFlow = MutableStateFlow("")
     val clientMessageFlow = _clientMessageFlow.asStateFlow()
 
+    private val _clientReceiptFlow = MutableStateFlow<TransactionResponse?>(null)
+    val clientReceiptFlow = _clientReceiptFlow.asStateFlow()
+
     private var transaction: Transaction? = null
 
     fun startTransaction(amount: Double) {
-        // Create a transaction instance
-        transaction = Transaction(amount, createOrderID())
-        _stateFlow.value = TransactionState.STARTED
+        transaction = Transaction(amount, terminal, apiKey, this)
+        _stateFlow.value = TransactionState.CARD_REQUEST
         _clientMessageFlow.value = "Please provide card"
     }
 
     fun readCardData() {
         if (_stateFlow.value == TransactionState.CARD_REQUEST) {
-            transaction?.provideCard() ?: Log.e("Payroc", "No ongoing transaction")
+            _stateFlow.value = TransactionState.STARTED
+            transaction?.let {
+                val receipt = transaction?.provideCard()
+                _clientReceiptFlow.value = receipt
+            } ?: run {
+                _stateFlow.value = TransactionState.ERROR
+                Log.e("Payroc", "No ongoing transaction")
+            }
         } else {
             Log.e("Payroc", "No card required")
         }
+    }
+
+    override fun updateState(state: TransactionState) {
+        _stateFlow.value = state
+    }
+
+    override fun receiptReceived(transactionResponse: TransactionResponse) {
+        _clientReceiptFlow.value = transactionResponse
     }
 }
 

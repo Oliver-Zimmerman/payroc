@@ -37,6 +37,10 @@ dependencies {
 
     // Data Parsing
     implementation 'com.google.code.gson:gson:2.9.0'
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.13.4'
+
+    // TLV Handling
+    implementation 'com.taptrack:kotlin-tlv:2.0.0'
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
