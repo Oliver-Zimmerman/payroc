@@ -6,7 +6,7 @@ import com.payroc.transaction.utility.createOrderID
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class PayrocClient(private val terminal: String, val apiKey: String) {
+class PayrocClient(private val terminal: String, private val apiKey: String) {
 
     private val _repository: PayrocRepository = PayrocRepository.getInstance()
 

@@ -19,26 +19,25 @@ class PayrocWebService {
         api = retrofit.create(PayrocService::class.java)
     }
 
-    fun authenticate(): AuthenticateResponse {
-        return api.authenticate()
+    fun authenticate(apiKey: String): AuthenticateResponse {
+        return api.authenticate("Basic $apiKey")
     }
 
-    fun createTransaction(transactionRequest: TransactionRequest): TransactionResponse {
-        return api.createTransaction(transactionRequest)
+    fun createTransaction(token: String, transactionRequest: TransactionRequest): TransactionResponse {
+        return api.createTransaction("Bearer $token", transactionRequest)
     }
 
     interface PayrocService {
         @Headers(
-            "Authorization: <param>"
+            "Content-Type: application/json",
         )
         @GET("account/authenticate")
-        fun authenticate(): AuthenticateResponse
+        fun authenticate(@Header("Authorization") apiKey: String): AuthenticateResponse
 
         @Headers(
             "Content-Type: application/json",
-            "Authorization: <param>"
         )
         @POST("transaction/payments")
-        fun createTransaction(@Body transactionRequest: TransactionRequest): TransactionResponse
+        fun createTransaction(@Header("Authorization") token: String, @Body transactionRequest: TransactionRequest): TransactionResponse
     }
 }
