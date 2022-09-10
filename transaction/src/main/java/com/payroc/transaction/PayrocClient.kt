@@ -27,7 +27,7 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
         _clientMessageFlow.value = "Please provide card"
     }
 
-    fun readCardData() {
+    suspend fun readCardData() {
         if (_stateFlow.value == TransactionState.CARD_REQUEST) {
             _stateFlow.value = TransactionState.STARTED
             transaction?.let {

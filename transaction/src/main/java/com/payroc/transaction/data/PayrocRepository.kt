@@ -7,11 +7,11 @@ import com.payroc.transaction.data.model.response.TransactionResponse
 // The class that gets the data from the server
 class PayrocRepository(private val webService: PayrocWebService = PayrocWebService()) {
 
-    fun authenticate(apiKey: String): AuthenticateResponse {
+    suspend fun authenticate(apiKey: String): AuthenticateResponse {
         return webService.authenticate(apiKey)
     }
 
-    fun createTransaction(token: String, transactionRequest: TransactionRequest): TransactionResponse {
+    suspend fun createTransaction(token: String, transactionRequest: TransactionRequest): TransactionResponse {
         return webService.createTransaction(token, transactionRequest)
     }
 

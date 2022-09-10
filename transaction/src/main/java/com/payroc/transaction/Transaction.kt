@@ -25,17 +25,17 @@ class Transaction(
 
     private val _repository: PayrocRepository = PayrocRepository.getInstance()
 
-    private fun authenticate(apiKey: String): String {
+    private suspend fun authenticate(apiKey: String): String {
         val authResponse = _repository.authenticate(apiKey)
         return authResponse.token
     }
 
-    fun provideCard(): TransactionResponse {
+    suspend fun provideCard(): TransactionResponse {
         transactionListener.updateState(TransactionState.READING)
         return transactionRequest(getCard())
     }
 
-    private fun transactionRequest(card: Card): TransactionResponse {
+    private suspend fun transactionRequest(card: Card): TransactionResponse {
         if (card.payloadType == "EMV") {
             val token = authenticate(apiKey)
             val transactionRequest = TransactionRequest(
