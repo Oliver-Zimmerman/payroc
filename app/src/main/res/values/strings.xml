@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Transaction Processor</string>
     <string name="amount">Amount</string>
+    <string name="pay">Pay</string>
 </resources>
