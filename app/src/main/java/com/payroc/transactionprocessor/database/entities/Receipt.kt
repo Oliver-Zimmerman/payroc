@@ -23,10 +23,12 @@ import com.payroc.transaction.data.model.response.TransactionResult
 data class Receipt(
     @PrimaryKey var uniqueReference: String,
     var terminal: String,
-    var order: Order,
+    //ToDo can't use data object as types in Room - Retrieve the whole thing as JSON String. or more likely use a converter to convert params into JSONString
+    /*var order: Order,
     var customerAccount: CustomerAccount,
     var securityCheck: SecurityCheck,
     var transactionResult: TransactionResult,
     var additionalDataFields: ArrayList<AdditionalDataFields> = arrayListOf(),
-    var emvTags: ArrayList<EmvTags> = arrayListOf(),
+    var emvTags: ArrayList<EmvTags> = arrayListOf(),*/
 )
+

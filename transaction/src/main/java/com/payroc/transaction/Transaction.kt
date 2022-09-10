@@ -51,7 +51,19 @@ class Transaction(
             return _repository.createTransaction(token, transactionRequest)
         } else {
             Log.e("Error", "MAG_STRIPE not yet implemented")
-            return TransactionResponse()
+            //ToDo change this to be MagSTRIPE implementation
+            val token = authenticate(apiKey)
+            val transactionRequest = TransactionRequest(
+                terminal = terminal,
+                order = Order(orderId = createOrderID(),
+                    totalAmount = amount,
+                    orderBreakdown = OrderBreakdown(subtotalAmount = amount)),
+                customerAccount = CustomerAccount(device = Device(dataKsn = card.dataKsn),
+                    generateTlv(),
+                    card.payloadType)
+            )
+            transactionListener.updateState(TransactionState.PROCESSING)
+            return _repository.createTransaction(token, transactionRequest)
         }
     }
 
