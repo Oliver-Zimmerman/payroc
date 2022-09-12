@@ -1,11 +1,28 @@
 package com.payroc.transactionprocessor.ui.home
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.ctc.wstx.stax.WstxInputFactory
+import com.ctc.wstx.stax.WstxOutputFactory
+import com.fasterxml.jackson.dataformat.xml.XmlFactory
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.google.gson.Gson
+import com.payroc.transaction.TransactionState
+import com.payroc.transaction.data.Card
+import com.payroc.transaction.data.CardDetails
+import com.payroc.transaction.data.Cards
 import com.payroc.transactionprocessor.R
 import com.payroc.transactionprocessor.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import fr.arnaudguyon.xmltojsonlib.XmlToJson
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import timber.log.Timber
+import kotlin.random.Random
+
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -21,8 +38,59 @@ class HomeActivity : AppCompatActivity() {
 
         homeViewModel = ViewModelProvider(this@HomeActivity)[HomeViewModel::class.java]
 
+        subscribeToObservables()
+
         binding.payButtonId.setOnClickListener {
             homeViewModel.payClicked(binding.amountEditText.text.toString().toDouble())
         }
+    }
+
+    private fun subscribeCardRead() {
+
+    }
+
+    private fun subscribeToObservables() {
+        lifecycleScope.launchWhenStarted {
+            homeViewModel.getState().collectLatest { state ->
+                Timber.i("State :: $state")
+                binding.stateTextView.text = state.toString()
+                when (state) {
+                    TransactionState.CARD_REQUEST -> {
+                        //ToDo pop up dialog to provide / tap card
+                        delay(2000)
+                        homeViewModel.provideCard(getCard())
+                    }
+                    else -> {
+                        Timber.e("Error :: Unverified state")
+                    }
+                }
+            }
+
+            homeViewModel.getClientMessage().collectLatest { message ->
+                Timber.i("Message :: $message")
+            }
+
+            homeViewModel.getReceipt().collectLatest { receipt ->
+                Timber.i("Receipt :: $receipt")
+            }
+        }
+    }
+
+    private fun getCard(): Card {
+        val cards = convertXMLToDataClass()
+        return cards.card[Random.nextInt(cards.card.size)]
+    }
+
+    // Move to utility?
+    private fun convertXMLToDataClass(): Cards {
+        Timber.i("filepath :: ${filesDir.path}")
+        val file = resources.openRawResource(R.raw.card_data)
+        val xmlToJson = XmlToJson.Builder(file, null).build()
+        file.close()
+
+        val cardsJsonObject = xmlToJson.toString()
+
+        val gson = Gson()
+        return gson.fromJson(cardsJsonObject, CardDetails::class.java).cards
     }
 }

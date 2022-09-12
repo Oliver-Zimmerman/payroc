@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeActivity">
 
+    <TextView
+        android:id="@+id/state_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:text = "IDLE"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+        app:layout_constraintStart_toEndOf="@id/guideline_start"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
     <EditText
         android:id="@+id/amount_edit_text"
         android:layout_width="wrap_content"
@@ -15,7 +26,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end"
         app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/state_text_view" />
 
     <Button
         android:id="@+id/pay_button_id"

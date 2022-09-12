@@ -1,6 +1,7 @@
 package com.payroc.transaction
 
 import android.util.Log
+import com.payroc.transaction.data.Card
 import com.payroc.transaction.data.model.response.TransactionResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,11 +28,11 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
         _clientMessageFlow.value = "Please provide card"
     }
 
-    suspend fun readCardData() {
+    suspend fun readCardData(card: Card) {
         if (_stateFlow.value == TransactionState.CARD_REQUEST) {
-            _stateFlow.value = TransactionState.STARTED
+           // _stateFlow.value = TransactionState.STARTED
             transaction?.let {
-                val receipt = transaction?.provideCard()
+                val receipt = transaction?.provideCard(card)
                 _clientReceiptFlow.value = receipt
             } ?: run {
                 _stateFlow.value = TransactionState.ERROR
@@ -43,7 +44,7 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     }
 
     override fun updateState(state: TransactionState) {
-        _stateFlow.value = state
+       // _stateFlow.value = state
     }
 
     override fun receiptReceived(transactionResponse: TransactionResponse) {
