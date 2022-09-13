@@ -1,5 +1,6 @@
 package com.payroc.transaction.data.model.request
 
+import com.payroc.transaction.data.model.CustomerAccount
 import com.payroc.transaction.data.model.Order
 
 data class TransactionRequest(
@@ -11,11 +12,16 @@ data class TransactionRequest(
 
 data class Device(
     var type: String = "PAX_A920_PRO",
-    var dataKsn: String
+    var dataKsn: String,
+    var serialNumber: String? = null,
 )
 
-data class CustomerAccount(
+data class CardDetails (
     var device: Device,
-    var tlv: String,
-    var payloadType: String
+    var encryptedData: String
+)
+
+data class EMVTags(
+    var hex: String,
+    var value: String,
 )

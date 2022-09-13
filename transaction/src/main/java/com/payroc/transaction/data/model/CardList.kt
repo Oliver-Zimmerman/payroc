@@ -1,4 +1,4 @@
-package com.payroc.transaction.data
+package com.payroc.transaction.data.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -34,7 +34,7 @@ data class Tag(
     val key: String,
     val value: String,
 )*/
-data class CardDetails(
+data class CardList(
     @SerializedName("cards") var cards: Cards = Cards(),
 )
 
@@ -42,10 +42,29 @@ data class Cards(
     @SerializedName("card") var card: ArrayList<Card> = arrayListOf(),
 )
 
+/*sealed class Card {
+    data class EMVCard(
+        @SerializedName("payloadType") var payloadType: String,
+        @SerializedName("dataKsn") var dataKsn: String,
+        @SerializedName("tags") var tags: ArrayList<Tags> = arrayListOf(),
+    ) : Card()
+
+    data class MAGCard(
+        @SerializedName("cardholderName") var cardholderName: String,
+        @SerializedName("dataKsn") var dataKsn: String,
+        @SerializedName("serialNumber") var serialNumber: String,
+        @SerializedName("encryptedData") var encryptedData: String,
+        @SerializedName("payloadType") var payloadType: String
+    ): Card()
+}*/
+
 data class Card(
     @SerializedName("payloadType") var payloadType: String,
     @SerializedName("dataKsn") var dataKsn: String,
-    @SerializedName("tags") var tags: ArrayList<Tags> = arrayListOf(),
+    @SerializedName("tags") var tags: ArrayList<Tags>? = null,
+    @SerializedName("cardholdername") var cardholdername: String? = null,
+    @SerializedName("serialNumber") var serialNumber: String? = null,
+    @SerializedName("encryptedData") var encryptedData: String? = null,
 )
 
 data class Tags(

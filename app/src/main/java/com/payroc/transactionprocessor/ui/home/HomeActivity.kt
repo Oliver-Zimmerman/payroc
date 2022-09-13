@@ -4,24 +4,19 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.ctc.wstx.stax.WstxInputFactory
-import com.ctc.wstx.stax.WstxOutputFactory
-import com.fasterxml.jackson.dataformat.xml.XmlFactory
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.payroc.transaction.TransactionState
-import com.payroc.transaction.data.Card
-import com.payroc.transaction.data.CardDetails
-import com.payroc.transaction.data.Cards
+import com.payroc.transaction.data.model.Card
+import com.payroc.transaction.data.model.CardList
+import com.payroc.transaction.data.model.Cards
 import com.payroc.transactionprocessor.R
 import com.payroc.transactionprocessor.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import timber.log.Timber
-import kotlin.random.Random
 
 
 @AndroidEntryPoint
@@ -78,7 +73,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun getCard(): Card {
         val cards = convertXMLToDataClass()
-        return cards.card[Random.nextInt(cards.card.size)]
+        // Ensure we only send the MAG_STRIPE card.
+        return cards.card[cards.card.size - 1]
     }
 
     // Move to utility?
@@ -91,6 +87,6 @@ class HomeActivity : AppCompatActivity() {
         val cardsJsonObject = xmlToJson.toString()
 
         val gson = Gson()
-        return gson.fromJson(cardsJsonObject, CardDetails::class.java).cards
+        return gson.fromJson(cardsJsonObject, CardList::class.java).cards
     }
 }

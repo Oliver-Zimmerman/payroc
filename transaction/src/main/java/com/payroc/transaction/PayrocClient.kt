@@ -1,7 +1,7 @@
 package com.payroc.transaction
 
 import android.util.Log
-import com.payroc.transaction.data.Card
+import com.payroc.transaction.data.model.Card
 import com.payroc.transaction.data.model.response.TransactionResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,8 +32,8 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
         if (_stateFlow.value == TransactionState.CARD_REQUEST) {
            // _stateFlow.value = TransactionState.STARTED
             transaction?.let {
-                val receipt = transaction?.provideCard(card)
-                _clientReceiptFlow.value = receipt
+               transaction?.provideCard(card)
+               // _clientReceiptFlow.value = receipt
             } ?: run {
                 _stateFlow.value = TransactionState.ERROR
                 Log.e("Payroc", "No ongoing transaction")

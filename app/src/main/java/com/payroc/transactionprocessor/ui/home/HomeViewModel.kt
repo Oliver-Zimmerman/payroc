@@ -1,12 +1,8 @@
 package com.payroc.transactionprocessor.ui.home
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.payroc.transaction.PayrocClient
-import com.payroc.transaction.data.Card
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import com.payroc.transaction.data.model.Card
 
 class HomeViewModel : ViewModel() {
 

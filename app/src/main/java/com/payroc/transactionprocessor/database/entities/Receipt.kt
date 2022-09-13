@@ -3,7 +3,6 @@ package com.payroc.transactionprocessor.database.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.payroc.transaction.data.model.Order
-import com.payroc.transaction.data.model.request.CustomerAccount
 import com.payroc.transaction.data.model.response.AdditionalDataFields
 import com.payroc.transaction.data.model.response.EmvTags
 import com.payroc.transaction.data.model.response.SecurityCheck

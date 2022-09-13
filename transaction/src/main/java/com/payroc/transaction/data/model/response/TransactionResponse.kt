@@ -2,7 +2,6 @@ package com.payroc.transaction.data.model.response
 
 import com.google.gson.annotations.SerializedName
 import com.payroc.transaction.data.model.Order
-import com.payroc.transaction.data.model.request.CustomerAccount
 
 data class TransactionResponse(
     @SerializedName("uniqueReference") var uniqueReference: String,
@@ -18,6 +17,14 @@ data class TransactionResponse(
 data class SecurityCheck(
     @SerializedName("cvvResult") var cvvResult: String,
     @SerializedName("avsResult") var avsResult: String,
+)
+
+data class CustomerAccount(
+    @SerializedName("cardType") var cardType: String? = null,
+    @SerializedName("cardholderName") var cardholderName: String? = null,
+    @SerializedName("maskedPan") var maskedPan: String? = null,
+    @SerializedName("expiryDate") var expiryDate: String? = null,
+    @SerializedName("entryMethod") var entryMethod: String? = null,
 )
 
 data class StoredPaymentCredentials(

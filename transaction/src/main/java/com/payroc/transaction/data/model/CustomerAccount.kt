@@ -1,11 +1,19 @@
 package com.payroc.transaction.data.model
 
-import com.google.gson.annotations.SerializedName
+import com.payroc.transaction.data.model.request.CardDetails
+import com.payroc.transaction.data.model.request.Device
 
-data class CustomerAccount(
-    @SerializedName("cardType") var cardType: String? = null,
-    @SerializedName("cardholderName") var cardholderName: String? = null,
-    @SerializedName("maskedPan") var maskedPan: String? = null,
-    @SerializedName("expiryDate") var expiryDate: String? = null,
-    @SerializedName("entryMethod") var entryMethod: String? = null,
-)
+sealed class CustomerAccount {
+    data class EMVCustomerAccount(
+        var device: Device,
+        var tlv: String? = null,
+        //var tags: ArrayList<EMVTags>,
+        var payloadType: String
+    ) : CustomerAccount()
+
+    data class MAGCustomerAccount(
+        var payloadType: String,
+        var cardholderName: String,
+        var cardDetails: CardDetails
+    ) : CustomerAccount()
+}
