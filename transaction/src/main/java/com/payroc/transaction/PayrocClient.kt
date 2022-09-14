@@ -30,7 +30,7 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
 
     suspend fun readCardData(card: Card) {
         if (_stateFlow.value == TransactionState.CARD_REQUEST) {
-           // _stateFlow.value = TransactionState.STARTED
+            _stateFlow.value = TransactionState.STARTED
             transaction?.let {
                transaction?.provideCard(card)
                // _clientReceiptFlow.value = receipt
@@ -44,7 +44,7 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     }
 
     override fun updateState(state: TransactionState) {
-       // _stateFlow.value = state
+        _stateFlow.value = state
     }
 
     override fun receiptReceived(transactionResponse: TransactionResponse) {

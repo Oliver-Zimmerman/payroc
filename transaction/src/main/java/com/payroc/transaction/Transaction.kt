@@ -1,6 +1,7 @@
 package com.payroc.transaction
 
 import android.util.Log
+import android.util.Log.e
 import com.payroc.transaction.data.model.Card
 import com.payroc.transaction.data.PayrocRepository
 import com.payroc.transaction.data.model.CustomerAccount
@@ -10,6 +11,9 @@ import com.payroc.transaction.data.model.request.CardDetails
 import com.payroc.transaction.data.model.request.Device
 import com.payroc.transaction.data.model.request.TransactionRequest
 import com.payroc.transaction.utility.createOrderID
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onSuccess
 
 
 class Transaction(
@@ -22,15 +26,28 @@ class Transaction(
     private val _repository: PayrocRepository = PayrocRepository.getInstance()
 
 
-    private suspend fun authenticate(apiKey: String): String {
+    private suspend fun authenticate(apiKey: String): String? {
+        var token: String? =  null
         val authResponse = _repository.authenticate(apiKey)
-        return authResponse.token
+        authResponse.onSuccess {
+            token = this.data.token
+        }.onError {
+            Log.e("Error", "Error....")
+        }.onException {
+            Log.e("Error", "Error....")
+        }
+        return token
     }
 
     suspend fun provideCard(card: Card) {
         val token = authenticate(apiKey)
-        transactionListener.updateState(TransactionState.READING)
-        transactionRequest(token, card)
+        token?.let {
+            transactionListener.updateState(TransactionState.READING)
+            transactionRequest(token, card)
+        } ?: run {
+            transactionListener.updateState(TransactionState.ERROR)
+            Log.e("Error", "Error....")
+        }
     }
 
     private suspend fun transactionRequest(token: String, card: Card) {
@@ -46,8 +63,14 @@ class Transaction(
                         card.payloadType)
                 )
                 transactionListener.updateState(TransactionState.PROCESSING)
-                val receipt = _repository.createTransaction(token, transactionRequest)
-                transactionListener.receiptReceived(receipt)
+                val receipt = _repository.createTransaction(token, transactionRequest).onSuccess {
+                }.onError {
+                    Log.e("Error", "Error....")
+
+                }.onException {
+                    Log.e("Error", "Error....")
+                }
+               // transactionListener.receiptReceived(receipt)
             }
              "MAG_STRIPE" -> {
                 val transactionRequest = TransactionRequest(
@@ -63,8 +86,14 @@ class Transaction(
                         ))
                 )
                 transactionListener.updateState(TransactionState.PROCESSING)
-                val receipt = _repository.createTransaction(token, transactionRequest)
-                transactionListener.receiptReceived(receipt)
+                val receipt = _repository.createTransaction(token, transactionRequest).onSuccess {
+                }.onError {
+                    Log.e("Error", "Error....")
+
+                }.onException {
+                    Log.e("Error", "Error....")
+                }
+               // transactionListener.receiptReceived(receipt)
             }
         }
     }

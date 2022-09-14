@@ -40,13 +40,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun subscribeCardRead() {
-
-    }
-
     private fun subscribeToObservables() {
         lifecycleScope.launchWhenStarted {
-            homeViewModel.getState().collectLatest { state ->
+            homeViewModel.getState().collect { state ->
                 Timber.i("State :: $state")
                 binding.stateTextView.text = state.toString()
                 when (state) {
@@ -60,12 +56,16 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
 
-            homeViewModel.getClientMessage().collectLatest { message ->
+        lifecycleScope.launchWhenStarted {
+            homeViewModel.getClientMessage().collect { message ->
                 Timber.i("Message :: $message")
             }
+        }
 
-            homeViewModel.getReceipt().collectLatest { receipt ->
+        lifecycleScope.launchWhenStarted {
+            homeViewModel.getReceipt().collect { receipt ->
                 Timber.i("Receipt :: $receipt")
             }
         }
@@ -74,7 +74,7 @@ class HomeActivity : AppCompatActivity() {
     private fun getCard(): Card {
         val cards = convertXMLToDataClass()
         // Ensure we only send the MAG_STRIPE card.
-        return cards.card[cards.card.size - 1]
+        return cards.card[1]
     }
 
     // Move to utility?
