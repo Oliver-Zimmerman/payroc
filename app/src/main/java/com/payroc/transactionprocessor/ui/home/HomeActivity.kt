@@ -17,6 +17,7 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
+import kotlin.random.Random
 
 
 @AndroidEntryPoint
@@ -73,8 +74,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun getCard(): Card {
         val cards = convertXMLToDataClass()
-        // Ensure we only send the MAG_STRIPE card.
-        return cards.card[1]
+        // Pick a random card from the list of available cards.
+        return cards.card[Random.nextInt(cards.card.size)]
     }
 
     // Move to utility?

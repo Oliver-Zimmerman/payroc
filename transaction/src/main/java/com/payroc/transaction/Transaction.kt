@@ -23,9 +23,11 @@ class Transaction(
     private val apiKey: String,
     private val transactionListener: TransactionListener,
 ) {
+    companion object {
+        private val TAG = this::class.java.simpleName
+    }
 
     private val _repository: PayrocRepository = PayrocRepository.getInstance()
-
 
     private suspend fun authenticate(apiKey: String): String? {
         var token: String? = null
@@ -33,9 +35,9 @@ class Transaction(
         authResponse.onSuccess {
             token = this.data.token
         }.onError {
-            Log.e("Error", "Error....")
+            Log.e(TAG, "Error....")
         }.onException {
-            Log.e("Error", "Error....")
+            Log.e(TAG, "Error....")
         }
         return token
     }
@@ -48,7 +50,7 @@ class Transaction(
         } ?: run {
             transactionListener.updateState(TransactionState.ERROR)
             //ToDo log state properly
-            Log.e("Error", "Error....")
+            Log.e(TAG, "Error....")
         }
     }
 
@@ -87,19 +89,21 @@ class Transaction(
             transactionListener.updateState(TransactionState.PROCESSING)
             val transactionResponse =
                 _repository.createTransaction(token, transactionRequest).onSuccess {
+                    val response = this.data
+                    transactionListener.receiptReceived(response.receipts)
                     //ToDo handle success filter object and obtain receipts only
                     // transactionListener.receiptReceived(receipt)
                 }.onError {
                     //ToDo log state properly
-                    Log.e("Error", "Error....")
+                    Log.e(TAG, "Error....")
 
                 }.onException {
                     //ToDo log state properly
-                    Log.e("Error", "Error....")
+                    Log.e(TAG, "Error....")
                 }
         } ?: run {
-            //ToDO update error state with message to client
-            Log.e("Error", "Unknown card type used")
+            //ToDO update error state with message to client - Unknown card type
+            Log.e(TAG, "Unknown card type used")
         }
     }
 }

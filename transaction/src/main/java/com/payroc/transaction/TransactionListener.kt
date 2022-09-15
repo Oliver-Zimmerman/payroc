@@ -1,5 +1,6 @@
 package com.payroc.transaction
 
+import com.payroc.transaction.data.model.response.Receipts
 import com.payroc.transaction.data.model.response.TransactionResponse
 
 interface TransactionListener {
@@ -11,8 +12,8 @@ interface TransactionListener {
     fun updateState(state: TransactionState)
 
     /** Fires once a receipt has been received as a result of a successful transaction
-     * @param transactionResponse the response provided by the transaction
-     * @see [TransactionResponse]
+     * @param receipts the receipts section of the response provided by the transaction
+     * @see [Receipts]
      */
-    fun receiptReceived(transactionResponse: TransactionResponse)
+    fun receiptReceived(receipts: ArrayList<Receipts>)
 }

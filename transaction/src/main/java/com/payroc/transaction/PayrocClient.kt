@@ -2,22 +2,23 @@ package com.payroc.transaction
 
 import android.util.Log
 import com.payroc.transaction.data.model.Card
+import com.payroc.transaction.data.model.response.Receipts
 import com.payroc.transaction.data.model.response.TransactionResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class PayrocClient(private val terminal: String, private val apiKey: String) : TransactionListener {
+    companion object {
+        private val TAG = this::class.java.simpleName
+    }
 
     private val _stateFlow = MutableStateFlow(TransactionState.IDLE)
     val stateFlow = _stateFlow.asStateFlow()
 
-    private val _cardReadRequestStatusFlow = MutableStateFlow(false)
-    val cardReadRequestStatusFlow = _cardReadRequestStatusFlow.asStateFlow()
-
     private val _clientMessageFlow = MutableStateFlow("")
     val clientMessageFlow = _clientMessageFlow.asStateFlow()
 
-    private val _clientReceiptFlow = MutableStateFlow<TransactionResponse?>(null)
+    private val _clientReceiptFlow = MutableStateFlow<ArrayList<Receipts>?>(null)
     val clientReceiptFlow = _clientReceiptFlow.asStateFlow()
 
     private var transaction: Transaction? = null
@@ -36,10 +37,10 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
                // _clientReceiptFlow.value = receipt
             } ?: run {
                 _stateFlow.value = TransactionState.ERROR
-                Log.e("Payroc", "No ongoing transaction")
+                Log.e(TAG, "No ongoing transaction")
             }
         } else {
-            Log.e("Payroc", "No card required")
+            Log.e(TAG, "No card required")
         }
     }
 
@@ -47,8 +48,9 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
         _stateFlow.value = state
     }
 
-    override fun receiptReceived(transactionResponse: TransactionResponse) {
-        _clientReceiptFlow.value = transactionResponse
+    override fun receiptReceived(receipts: ArrayList<Receipts>) {
+        Log.i(TAG, "Receipts received $receipts")
+        //  _clientReceiptFlow.value = receipts
     }
 }
 
