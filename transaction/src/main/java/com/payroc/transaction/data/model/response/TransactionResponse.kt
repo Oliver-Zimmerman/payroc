@@ -12,6 +12,7 @@ data class TransactionResponse(
     @SerializedName("transactionResult") var transactionResult: TransactionResult,
     @SerializedName("additionalDataFields") var additionalDataFields: ArrayList<AdditionalDataFields> = arrayListOf(),
     @SerializedName("emvTags") var emvTags: ArrayList<EmvTags> = arrayListOf(),
+    @SerializedName("receipts") var receipts: ArrayList<Receipts> = arrayListOf(),
 )
 
 data class SecurityCheck(
@@ -56,4 +57,32 @@ data class AdditionalDataFields(
 data class EmvTags(
     @SerializedName("hex") var hex: String,
     @SerializedName("value") var value: String,
+)
+
+data class Receipts(
+    @SerializedName("copy") var copy: String? = null,
+    @SerializedName("header") var header: String? = null,
+    @SerializedName("merchantDetails") var merchantDetails: ArrayList<MerchantDetails> = arrayListOf(),
+    @SerializedName("transactionData") var transactionData: ArrayList<TransactionData> = arrayListOf(),
+    @SerializedName("customFields") var customFields: ArrayList<String> = arrayListOf(),
+    @SerializedName("iccData") var iccData: ArrayList<IccData> = arrayListOf(),
+    @SerializedName("footer") var footer: String? = null,
+)
+
+data class IccData(
+    @SerializedName("order") var order: Int? = null,
+    @SerializedName("label") var label: String? = null,
+    @SerializedName("value") var value: String? = null,
+)
+
+data class TransactionData(
+    @SerializedName("order") var order: Int? = null,
+    @SerializedName("label") var label: String? = null,
+    @SerializedName("value") var value: String? = null,
+)
+
+data class MerchantDetails(
+    @SerializedName("order") var order: Int? = null,
+    @SerializedName("label") var label: String? = null,
+    @SerializedName("value") var value: String? = null,
 )
