@@ -88,6 +88,7 @@ class Transaction(
 
             }
         }
+        transactionListener.clientMessageReceived("Going online")
         transactionRequest?.let {
             transactionListener.updateState(TransactionState.PROCESSING)
             _repository.createTransaction(token, transactionRequest).onSuccess {

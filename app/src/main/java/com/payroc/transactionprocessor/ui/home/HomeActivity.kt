@@ -7,13 +7,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.payroc.transaction.TransactionState
 import com.payroc.transaction.data.model.Card
-import com.payroc.transaction.data.model.CardList
-import com.payroc.transaction.data.model.Cards
-import com.payroc.transactionprocessor.R
 import com.payroc.transactionprocessor.database.entities.Receipt
 import com.payroc.transactionprocessor.databinding.ActivityMainBinding
+import com.payroc.transactionprocessor.utility.convertXMLToDataClass
 import dagger.hilt.android.AndroidEntryPoint
-import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,16 +50,11 @@ class HomeActivity : AppCompatActivity() {
         homeViewModel.getState().observe(this) { state ->
             Timber.i("State :: $state")
             binding.stateTextView.text = state.toString()
-            when (state) {
-                TransactionState.CARD_REQUEST -> {
-                    //ToDo pop up dialog to provide / tap card
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        delay(2000)
-                        homeViewModel.provideCard(getCard())
-                    }
-                }
-                else -> {
-                    Timber.e("Error :: Unverified state")
+            if (state == TransactionState.CARD_REQUEST) {
+                //ToDo pop up dialog to provide / tap card
+                lifecycleScope.launch(Dispatchers.Main) {
+                    delay(2000)
+                    homeViewModel.provideCard(getCard())
                 }
             }
         }
@@ -74,7 +66,8 @@ class HomeActivity : AppCompatActivity() {
         }
 
         // Client Receipt Observable
-        homeViewModel.getReceipt().observe(this) { receiptsArray ->
+        homeViewModel.getReceipt().observe(this)
+        { receiptsArray ->
             Timber.i("Receipt Received :: $receiptsArray")
             receiptsArray?.let { receipts ->
                 receipts.forEach { receipt ->
@@ -98,68 +91,55 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    /*private fun subscribeToObservables() {
-        lifecycleScope.launchWhenStarted {
-            homeViewModel.getState().collect { state ->
-                Timber.i("State :: $state")
-                binding.stateTextView.text = state.toString()
-                when (state) {
-                    TransactionState.CARD_REQUEST -> {
-                        //ToDo pop up dialog to provide / tap card
-                        delay(2000)
-                        homeViewModel.provideCard(getCard())
-                    }
-                    else -> {
-                        Timber.e("Error :: Unverified state")
-                    }
+/*private fun subscribeToObservables() {
+    lifecycleScope.launchWhenStarted {
+        homeViewModel.getState().collect { state ->
+            Timber.i("State :: $state")
+            binding.stateTextView.text = state.toString()
+            when (state) {
+                TransactionState.CARD_REQUEST -> {
+                    //ToDo pop up dialog to provide / tap card
+                    delay(2000)
+                    homeViewModel.provideCard(getCard())
+                }
+                else -> {
+                    Timber.e("Error :: Unverified state")
                 }
             }
         }
+    }
 
-        lifecycleScope.launchWhenStarted {
-            homeViewModel.getClientMessage().collect { message ->
-                Timber.i("Message :: $message")
-            }
+    lifecycleScope.launchWhenStarted {
+        homeViewModel.getClientMessage().collect { message ->
+            Timber.i("Message :: $message")
         }
+    }
 
-        lifecycleScope.launchWhenStarted {
-            homeViewModel.getReceipt().collect { receiptsArray ->
-                Timber.i("Receipt Received :: $receiptsArray")
-                receiptsArray?.let { receipts ->
-                    receipts.forEach { receipt ->
-                        when (receipt.header) {
-                            "MERCHANT COPY" -> {
-                                // Should be stored internally for POS reference
-                                val gson = Gson()
-                                val receiptJsonString = gson.toJson(receipt)
-                                val receiptEntity = Receipt(receipts = receiptJsonString)
-                                homeViewModel.insertReceipt(receiptEntity)
-                            }
-                            "CARDHOLDER COPY" -> {
-                                //ToDo print card holder copy for customer
-                            }
+    lifecycleScope.launchWhenStarted {
+        homeViewModel.getReceipt().collect { receiptsArray ->
+            Timber.i("Receipt Received :: $receiptsArray")
+            receiptsArray?.let { receipts ->
+                receipts.forEach { receipt ->
+                    when (receipt.header) {
+                        "MERCHANT COPY" -> {
+                            // Should be stored internally for POS reference
+                            val gson = Gson()
+                            val receiptJsonString = gson.toJson(receipt)
+                            val receiptEntity = Receipt(receipts = receiptJsonString)
+                            homeViewModel.insertReceipt(receiptEntity)
+                        }
+                        "CARDHOLDER COPY" -> {
+                            //ToDo print card holder copy for customer
                         }
                     }
                 }
             }
-        }*/
+        }
+    }*/
 
     private fun getCard(): Card {
-        val cards = convertXMLToDataClass()
+        val cards = convertXMLToDataClass(applicationContext)
         // Pick a random card from the list of available cards.
         return cards.card[Random.nextInt(cards.card.size)]
-    }
-
-    // Move to utility?
-    private fun convertXMLToDataClass(): Cards {
-        Timber.i("filepath :: ${filesDir.path}")
-        val file = resources.openRawResource(R.raw.card_data)
-        val xmlToJson = XmlToJson.Builder(file, null).build()
-        file.close()
-
-        val cardsJsonObject = xmlToJson.toString()
-
-        val gson = Gson()
-        return gson.fromJson(cardsJsonObject, CardList::class.java).cards
     }
 }
