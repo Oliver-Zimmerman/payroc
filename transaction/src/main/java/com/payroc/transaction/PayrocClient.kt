@@ -15,9 +15,9 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
         private val TAG = this::class.java.simpleName
     }
 
-     private val stateLiveData = MutableLiveData<TransactionState>()
-     private val clientMessageLiveData = MutableLiveData<String>()
-     private val clientReceiptLiveData = MutableLiveData<ArrayList<Receipts>>()
+    private val stateLiveData = MutableLiveData<TransactionState>()
+    private val clientMessageLiveData = MutableLiveData<String>()
+    private val clientReceiptLiveData = MutableLiveData<ArrayList<Receipts>>()
 
     /* private val _stateFlow = MutableStateFlow(TransactionState.IDLE)
      val stateFlow = _stateFlow.asStateFlow()
@@ -70,11 +70,18 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     }
 
     override fun updateState(state: TransactionState) {
+        Log.i(TAG, "State Received :: $state")
         stateLiveData.value = state
     }
 
+    override fun clientMessageReceived(message: String) {
+        Log.i(TAG, "Message Received :: $message")
+        clientMessageLiveData.value = message
+
+    }
+
     override fun receiptReceived(receipts: ArrayList<Receipts>) {
-        Log.i(TAG, "Receipts received $receipts")
+        Log.i(TAG, "Receipts Received :: $receipts")
         clientReceiptLiveData.value = receipts
         stateLiveData.value = TransactionState.COMPLETE
     }

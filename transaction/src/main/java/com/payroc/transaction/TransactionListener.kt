@@ -11,6 +11,11 @@ interface TransactionListener {
      */
     fun updateState(state: TransactionState)
 
+    /** Fires once a message is being emitted from the client
+     * @param message the message being emitted from the client
+     */
+    fun clientMessageReceived(message: String)
+
     /** Fires once a receipt has been received as a result of a successful transaction
      * @param receipts the receipts section of the response provided by the transaction
      * @see [Receipts]
