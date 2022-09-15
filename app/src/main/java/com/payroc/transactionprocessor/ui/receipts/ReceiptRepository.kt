@@ -3,6 +3,6 @@ package com.payroc.transactionprocessor.ui.receipts
 import com.payroc.transactionprocessor.database.entities.Receipt
 
 interface ReceiptRepository {
-    fun insertReceipt(receipt: Receipt)
-    fun getReceipts(): List<Receipt>
+    suspend fun insertReceipt(receipt: Receipt)
+    suspend fun getReceipts(): List<Receipt>
 }

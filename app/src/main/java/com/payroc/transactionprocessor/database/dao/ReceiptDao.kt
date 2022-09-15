@@ -8,8 +8,8 @@ import com.payroc.transactionprocessor.database.entities.Receipt
 @Dao
 interface ReceiptDao {
     @Query("SELECT * FROM receipt_table")
-    fun getAllReceipts(): List<Receipt>
+    suspend fun getAllReceipts(): List<Receipt>
 
     @Insert
-    fun insertReceipt(receipt: Receipt)
+    suspend fun insertReceipt(receipt: Receipt)
 }

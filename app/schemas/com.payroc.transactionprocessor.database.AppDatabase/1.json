@@ -2,21 +2,21 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a5709e3c8919a6a58e0ec374d471135d",
+    "identityHash": "566f79c031462400a01ca52317fc4443",
     "entities": [
       {
         "tableName": "receipt_table",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uniqueReference` TEXT NOT NULL, `terminal` TEXT NOT NULL, PRIMARY KEY(`uniqueReference`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uniqueReference` INTEGER PRIMARY KEY AUTOINCREMENT, `receipts` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "uniqueReference",
             "columnName": "uniqueReference",
-            "affinity": "TEXT",
-            "notNull": true
+            "affinity": "INTEGER",
+            "notNull": false
           },
           {
-            "fieldPath": "terminal",
-            "columnName": "terminal",
+            "fieldPath": "receipts",
+            "columnName": "receipts",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -25,7 +25,7 @@
           "columnNames": [
             "uniqueReference"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
@@ -34,7 +34,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a5709e3c8919a6a58e0ec374d471135d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '566f79c031462400a01ca52317fc4443')"
     ]
   }
 }

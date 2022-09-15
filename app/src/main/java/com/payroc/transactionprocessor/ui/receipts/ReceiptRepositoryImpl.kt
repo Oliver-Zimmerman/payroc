@@ -6,11 +6,11 @@ import javax.inject.Inject
 
 class ReceiptRepositoryImpl @Inject constructor(private val receiptDao: ReceiptDao) :
     ReceiptRepository {
-    override fun insertReceipt(receipt: Receipt) {
+    override suspend fun insertReceipt(receipt: Receipt) {
         receiptDao.insertReceipt(receipt)
     }
 
-    override fun getReceipts(): List<Receipt> {
+    override suspend fun getReceipts(): List<Receipt> {
         return receiptDao.getAllReceipts()
     }
 }

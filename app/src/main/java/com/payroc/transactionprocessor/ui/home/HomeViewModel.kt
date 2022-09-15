@@ -1,10 +1,17 @@
 package com.payroc.transactionprocessor.ui.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.payroc.transaction.PayrocClient
 import com.payroc.transaction.data.model.Card
+import com.payroc.transactionprocessor.database.entities.Receipt
+import com.payroc.transactionprocessor.ui.receipts.ReceiptRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val receiptRepository: ReceiptRepository) : ViewModel() {
 
     //ToDo API key should be in a properties file that needs to be added each clone
     private val payrocClient: PayrocClient = PayrocClient("5140001",
@@ -18,9 +25,32 @@ class HomeViewModel : ViewModel() {
         payrocClient.readCardData(card)
     }
 
-    fun getState() = payrocClient.stateFlow
+    /**
+     * Launching a new coroutine to insert the data in a non-blocking way
+     */
+    suspend fun insertReceipt(receipt: Receipt) = viewModelScope.launch {
+        receiptRepository.insertReceipt(receipt)
+    }
+
+   /* fun getState() = payrocClient.stateFlow
 
     fun getClientMessage() = payrocClient.clientMessageFlow
 
-    fun getReceipt() = payrocClient.clientReceiptFlow
+    fun getReceipt() = payrocClient.clientReceiptFlow */
+
+    fun getState() = payrocClient.getStateResponse()
+
+    fun getClientMessage() = payrocClient.getClientMessageResponse()
+
+    fun getReceipt() = payrocClient.getClientReceiptResponse()
 }
+
+/*class HomeViewModelFactory(private val repository: ReceiptRepository) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HomeViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}*/
