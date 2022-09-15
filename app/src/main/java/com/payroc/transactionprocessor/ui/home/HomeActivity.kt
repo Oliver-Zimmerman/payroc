@@ -70,6 +70,7 @@ class HomeActivity : AppCompatActivity() {
         // Client Message Observable
         homeViewModel.getClientMessage().observe(this) { message ->
             Timber.i("Message :: $message")
+            binding.clientMessageTextView.text = message
         }
 
         // Client Receipt Observable

@@ -35,9 +35,11 @@ class Transaction(
         authResponse.onSuccess {
             token = this.data.token
         }.onError {
+            //Todo print this properly
             Log.e(TAG, this.errorBody.toString())
             transactionListener.clientMessageReceived("There was an issue authenticating your client")
         }.onException {
+            //Todo print this properly
             Log.e(TAG, this.exception.message.toString())
         }
         return token
@@ -94,9 +96,11 @@ class Transaction(
             }.onError {
                 transactionListener.updateState(TransactionState.ERROR)
                 transactionListener.clientMessageReceived("There was an error processing the payment")
+                //Todo print this properly
                 Log.e(TAG, this.errorBody.toString())
             }.onException {
                 transactionListener.updateState(TransactionState.ERROR)
+                //Todo print this properly
                 Log.e(TAG, this.exception.message.toString())
             }
         } ?: run {
