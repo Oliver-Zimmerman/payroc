@@ -63,9 +63,11 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
             } ?: run {
                 stateLiveData.value = TransactionState.ERROR
                 Log.e(TAG, "No ongoing transaction")
+                clientMessageLiveData.value = "No ongoing transaction"
             }
         } else {
             Log.e(TAG, "No card required")
+            clientMessageLiveData.value = "No card required"
         }
     }
 

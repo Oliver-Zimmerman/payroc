@@ -36,6 +36,7 @@ class Transaction(
             token = this.data.token
         }.onError {
             Log.e(TAG, this.errorBody.toString())
+            transactionListener.clientMessageReceived("There was an issue authenticating your client")
         }.onException {
             Log.e(TAG, this.exception.message.toString())
         }
@@ -49,6 +50,7 @@ class Transaction(
             transactionRequest(token, card)
         } ?: run {
             transactionListener.updateState(TransactionState.ERROR)
+            transactionListener.clientMessageReceived("There was an issue reading the provided card")
             Log.e(TAG, "There was an issue reading the provided card")
         }
     }
@@ -91,6 +93,7 @@ class Transaction(
                 transactionListener.receiptReceived(response.receipts)
             }.onError {
                 transactionListener.updateState(TransactionState.ERROR)
+                transactionListener.clientMessageReceived("There was an error processing the payment")
                 Log.e(TAG, this.errorBody.toString())
             }.onException {
                 transactionListener.updateState(TransactionState.ERROR)
@@ -98,6 +101,7 @@ class Transaction(
             }
         } ?: run {
             transactionListener.updateState(TransactionState.ERROR)
+            transactionListener.clientMessageReceived("Unknown card type used")
             Log.e(TAG, "Unknown card type used")
         }
     }
