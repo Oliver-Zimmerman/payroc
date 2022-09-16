@@ -52,6 +52,9 @@ android {
         // Material UI
         implementation 'com.google.android.material:material:1.8.0-alpha01'
 
+        // Number Keyboard
+        implementation 'com.github.davidmigloz:number-keyboard:3.0.0'
+
         // DI - Hilt
         def hilt_version = "2.38.1"
         implementation "com.google.dagger:hilt-android:$hilt_version"

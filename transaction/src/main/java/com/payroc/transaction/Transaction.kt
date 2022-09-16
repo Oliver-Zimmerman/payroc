@@ -13,6 +13,7 @@ import com.payroc.transaction.data.model.request.Device
 import com.payroc.transaction.data.model.request.TransactionRequest
 import com.payroc.transaction.utility.createOrderID
 import com.payroc.transaction.utility.generateTlv
+import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
@@ -35,12 +36,10 @@ class Transaction(
         authResponse.onSuccess {
             token = this.data.token
         }.onError {
-            //Todo print this properly
-            Log.e(TAG, this.errorBody.toString())
+            Log.e(TAG, message())
             transactionListener.clientMessageReceived("There was an issue authenticating your client")
         }.onException {
-            //Todo print this properly
-            Log.e(TAG, this.exception.message.toString())
+            Log.e(TAG, message())
         }
         return token
     }
@@ -97,12 +96,10 @@ class Transaction(
             }.onError {
                 transactionListener.updateState(TransactionState.ERROR)
                 transactionListener.clientMessageReceived("There was an error processing the payment")
-                //Todo print this properly
-                Log.e(TAG, this.errorBody.toString())
+                Log.e(TAG, message())
             }.onException {
                 transactionListener.updateState(TransactionState.ERROR)
-                //Todo print this properly
-                Log.e(TAG, this.exception.message.toString())
+                Log.e(TAG, message())
             }
         } ?: run {
             transactionListener.updateState(TransactionState.ERROR)
