@@ -1,18 +1,16 @@
 package com.payroc.transactionprocessor.ui.pay
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.davidmiguel.numberkeyboard.NumberKeyboardListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.GsonBuilder
+import com.google.gson.Gson
 import com.payroc.transaction.TransactionState
 import com.payroc.transaction.data.model.Card
 import com.payroc.transactionprocessor.R
@@ -22,11 +20,10 @@ import com.payroc.transactionprocessor.utility.convertXMLToDataClass
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.random.Random
-
 
 @AndroidEntryPoint
 class PayFragment : Fragment(R.layout.fragment_pay),
@@ -38,7 +35,7 @@ class PayFragment : Fragment(R.layout.fragment_pay),
 
     private lateinit var payViewModel: PayViewModel
 
-    private val gson = GsonBuilder().setPrettyPrinting().create()
+    @Inject lateinit var gson: Gson
 
     private var amountText: String = ""
     private var amount: Double = 0.0
@@ -94,11 +91,6 @@ class PayFragment : Fragment(R.layout.fragment_pay),
                 else -> {
                     if (state == TransactionState.CARD_REQUEST) {
                         cardConfirmationAlert()
-                        //ToDo pop up dialog to provide / tap card
-                        /*lifecycleScope.launch(Dispatchers.Main) {
-                            delay(2000)
-                            payViewModel.provideCard(getCard())
-                        }*/
                     }
                 }
             }
@@ -169,7 +161,6 @@ class PayFragment : Fragment(R.layout.fragment_pay),
         val cards = convertXMLToDataClass(requireContext())
         // Pick a random card from the list of available cards.
         return cards.card[Random.nextInt(cards.card.size)]
-        //return cards.card[cards.card.size-1]
     }
 
     // Comma implementation

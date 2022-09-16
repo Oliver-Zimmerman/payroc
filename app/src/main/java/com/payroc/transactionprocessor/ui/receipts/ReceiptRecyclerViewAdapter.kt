@@ -10,13 +10,24 @@ import com.google.gson.Gson
 import com.payroc.transaction.data.model.response.Receipts
 import com.payroc.transactionprocessor.database.entities.Receipt
 import com.payroc.transactionprocessor.databinding.ReceiptViewBinding
-
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 
 class ReceiptRecyclerViewAdapter(val receipts: List<Receipt>) :
     RecyclerView.Adapter<ReceiptRecyclerViewAdapter.ReceiptViewHolder>() {
 
     // Initialize context with overridden onAttachedToRecyclerView
     private lateinit var context: Context
+
+    private lateinit var gson: Gson
+
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface ViewAdapterEntryPoint {
+        fun providesGsonInstance(): Gson
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReceiptViewHolder {
         val binding = ReceiptViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -62,13 +73,18 @@ class ReceiptRecyclerViewAdapter(val receipts: List<Receipt>) :
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         context = recyclerView.context
+
+        // We have context and can now use the entry point
+        val viewAdapterEntryPoint =
+            EntryPointAccessors.fromApplication(context, ViewAdapterEntryPoint::class.java)
+        gson = viewAdapterEntryPoint.providesGsonInstance()
     }
 
     override fun getItemCount(): Int {
         return receipts.size
     }
 
-    inner class ReceiptViewHolder(val binding: ReceiptViewBinding)
-        :RecyclerView.ViewHolder(binding.root)
+    inner class ReceiptViewHolder(val binding: ReceiptViewBinding) :
+        RecyclerView.ViewHolder(binding.root)
 }
 

@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ReceiptsViewModel @Inject constructor(private val receiptRepository: ReceiptRepository) :
+class ReceiptsViewModel @Inject constructor(receiptRepository: ReceiptRepository) :
     ViewModel() {
 
     internal val allReceipts: LiveData<List<Receipt>> = receiptRepository.getReceipts()
