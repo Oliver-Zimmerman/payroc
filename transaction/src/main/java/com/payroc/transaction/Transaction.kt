@@ -112,3 +112,25 @@ class Transaction(
         }
     }
 }
+
+/**
+ *
+ * Enum class to represent the different Transaction States that a transaction can be in.
+ *
+ * @property IDLE idle state, no transaction is being handled
+ * @property STARTED a transaction has been started, the amount has been provided
+ * @property CARD_REQUEST the client is waiting for a card to process the transaction
+ * @property READING a card has been provided and the information is being read
+ * @property PROCESSING the client is processing the transaction with the provided amount and card details
+ * @property COMPLETE a transaction has successfully completed
+ * @property ERROR an error has occurred
+ */
+enum class TransactionState {
+    IDLE,
+    STARTED,
+    CARD_REQUEST,
+    READING,
+    PROCESSING,
+    COMPLETE,
+    ERROR
+}

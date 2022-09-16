@@ -39,9 +39,29 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     fun getClientReceiptResponse(): LiveData<ArrayList<Receipts>> = clientReceiptLiveData
 
     fun startTransaction(amount: Double) {
-        transaction = Transaction(amount, terminal, apiKey, this)
-        stateLiveData.value = TransactionState.CARD_REQUEST
-        clientMessageLiveData.value = "Please provide card"
+        if (amount <= 0.0) {
+            stateLiveData.value = TransactionState.ERROR
+            clientMessageLiveData.value = "Invalid transaction amount"
+        } else {
+            transaction = Transaction(amount, terminal, apiKey, this)
+            stateLiveData.value = TransactionState.CARD_REQUEST
+            clientMessageLiveData.value = "Please provide card"
+        }
+    }
+
+    fun cancelTransaction() {
+        if (stateLiveData.value == TransactionState.CARD_REQUEST) {
+            transaction = null
+            stateLiveData.value = TransactionState.IDLE
+            clientMessageLiveData.value = "Transaction cancelled"
+        } else {
+            transaction?.let {
+                clientMessageLiveData.value = "Transaction in invalid state. Unable to cancel"
+            } ?: run {
+                clientMessageLiveData.value = "No transaction to cancel"
+            }
+        }
+
     }
 
     suspend fun readCardData(card: Card) {
@@ -77,24 +97,3 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     }
 }
 
-/**
- *
- * Enum class to represent the different Transaction States that a transaction can be in.
- *
- * @property IDLE idle state, no transaction is being handled
- * @property STARTED a transaction has been started, the amount has been provided
- * @property CARD_REQUEST the client is waiting for a card to process the transaction
- * @property READING a card has been provided and the information is being read
- * @property PROCESSING the client is processing the transaction with the provided amount and card details
- * @property COMPLETE a transaction has successfully completed
- * @property ERROR an error has occurred
- */
-enum class TransactionState {
-    IDLE,
-    STARTED,
-    CARD_REQUEST,
-    READING,
-    PROCESSING,
-    COMPLETE,
-    ERROR
-}

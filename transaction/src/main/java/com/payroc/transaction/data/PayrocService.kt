@@ -39,7 +39,10 @@ class PayrocWebService {
         return api.authenticate("Basic $apiKey")
     }
 
-    suspend fun createTransaction(token: String, transactionRequest: TransactionRequest): ApiResponse<TransactionResponse> {
+    suspend fun createTransaction(
+        token: String,
+        transactionRequest: TransactionRequest,
+    ): ApiResponse<TransactionResponse> {
         return api.createTransaction("Bearer $token", transactionRequest)
     }
 
@@ -48,12 +51,15 @@ class PayrocWebService {
             "Content-Type: application/json",
         )
         @GET("account/authenticate")
-       suspend fun authenticate(@Header("Authorization") apiKey: String): ApiResponse<AuthenticateResponse>
+        suspend fun authenticate(@Header("Authorization") apiKey: String): ApiResponse<AuthenticateResponse>
 
         @Headers(
             "Content-Type: application/json",
         )
         @POST("transaction/payments")
-       suspend fun createTransaction(@Header("Authorization") token: String, @Body transactionRequest: TransactionRequest): ApiResponse<TransactionResponse>
+        suspend fun createTransaction(
+            @Header("Authorization") token: String,
+            @Body transactionRequest: TransactionRequest,
+        ): ApiResponse<TransactionResponse>
     }
 }

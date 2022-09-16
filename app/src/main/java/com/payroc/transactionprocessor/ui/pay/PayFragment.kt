@@ -1,9 +1,12 @@
 package com.payroc.transactionprocessor.ui.pay
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +20,7 @@ import com.payroc.transactionprocessor.database.entities.Receipt
 import com.payroc.transactionprocessor.databinding.FragmentPayBinding
 import com.payroc.transactionprocessor.utility.convertXMLToDataClass
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -89,11 +93,12 @@ class PayFragment : Fragment(R.layout.fragment_pay),
                 }
                 else -> {
                     if (state == TransactionState.CARD_REQUEST) {
+                        cardConfirmationAlert()
                         //ToDo pop up dialog to provide / tap card
-                        lifecycleScope.launch(Dispatchers.Main) {
+                        /*lifecycleScope.launch(Dispatchers.Main) {
                             delay(2000)
                             payViewModel.provideCard(getCard())
-                        }
+                        }*/
                     }
                 }
             }
@@ -133,6 +138,25 @@ class PayFragment : Fragment(R.layout.fragment_pay),
                 number = receiptList.size
                 isVisible = true
             }
+        }
+    }
+
+    private fun cardConfirmationAlert() {
+        val builder = AlertDialog.Builder(requireContext())
+        with(builder)
+        {
+            setTitle("Provide Card")
+            setMessage("Tap to proceed")
+            setIcon(R.drawable.ic_home)
+            setPositiveButton("Tap") { _, _ ->
+                CoroutineScope(Dispatchers.Main).launch {
+                    payViewModel.provideCard(getCard())
+                }
+            }
+            setNegativeButton("Cancel") { _, _ ->
+                payViewModel.cancelTransaction()
+            }
+            show()
         }
     }
 

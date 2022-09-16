@@ -28,6 +28,10 @@ class PayViewModel  @Inject constructor(private val receiptRepository: ReceiptRe
         payrocClient.readCardData(card)
     }
 
+    fun cancelTransaction() {
+        payrocClient.cancelTransaction()
+    }
+
     suspend fun insertReceipt(receipt: Receipt) = viewModelScope.launch {
         receiptRepository.insertReceipt(receipt)
     }
