@@ -19,15 +19,6 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     private val clientMessageLiveData = MutableLiveData<String>()
     private val clientReceiptLiveData = MutableLiveData<ArrayList<Receipts>>()
 
-    /* private val _stateFlow = MutableStateFlow(TransactionState.IDLE)
-     val stateFlow = _stateFlow.asStateFlow()
-
-     private val _clientMessageFlow = MutableStateFlow("")
-     val clientMessageFlow = _clientMessageFlow.asStateFlow()
-
-     private val _clientReceiptFlow = MutableStateFlow<ArrayList<Receipts>?>(null)
-     val clientReceiptFlow = _clientReceiptFlow.asStateFlow()*/
-
     private var transaction: Transaction? = null
 
     /**
@@ -49,8 +40,6 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
 
     fun startTransaction(amount: Double) {
         transaction = Transaction(amount, terminal, apiKey, this)
-        // _stateFlow.value = TransactionState.CARD_REQUEST
-        // _clientMessageFlow.value = "Please provide card"
         stateLiveData.value = TransactionState.CARD_REQUEST
         clientMessageLiveData.value = "Please provide card"
     }
@@ -85,7 +74,6 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     override fun receiptReceived(receipts: ArrayList<Receipts>) {
         Log.i(TAG, "Receipts Received :: $receipts")
         clientReceiptLiveData.value = receipts
-        stateLiveData.value = TransactionState.COMPLETE
     }
 }
 

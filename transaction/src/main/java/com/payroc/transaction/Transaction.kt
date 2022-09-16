@@ -92,13 +92,16 @@ class Transaction(
             transactionListener.updateState(TransactionState.PROCESSING)
             _repository.createTransaction(token, transactionRequest).onSuccess {
                 val response = this.data
+                transactionListener.updateState(TransactionState.COMPLETE)
                 transactionListener.receiptReceived(response.receipts)
+                transactionListener.clientMessageReceived("Transaction complete")
             }.onError {
                 transactionListener.updateState(TransactionState.ERROR)
                 transactionListener.clientMessageReceived("There was an error processing the payment")
                 Log.e(TAG, message())
             }.onException {
                 transactionListener.updateState(TransactionState.ERROR)
+                transactionListener.clientMessageReceived("There was an error processing the payment")
                 Log.e(TAG, message())
             }
         } ?: run {

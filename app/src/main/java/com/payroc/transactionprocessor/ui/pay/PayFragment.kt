@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.davidmiguel.numberkeyboard.NumberKeyboardListener
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.payroc.transaction.TransactionState
 import com.payroc.transaction.data.model.Card
 import com.payroc.transactionprocessor.R
@@ -35,7 +36,7 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentPayBinding.inflate(inflater, container, false)
         return binding.root
@@ -53,6 +54,13 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
         }
     }
 
+    override fun onDestroyView() {
+        // Reset amount values
+        amountText = ""
+        amount = 0.0
+        super.onDestroyView()
+    }
+
     private fun subscribeToObservables() {
         // State Observable
         payViewModel.getState().observe(viewLifecycleOwner) { state ->
@@ -64,6 +72,11 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
                     delay(2000)
                     payViewModel.provideCard(getCard())
                 }
+            } else if (state == TransactionState.COMPLETE) {
+                // Reset amount values
+                amountText = ""
+                amount = 0.0
+                binding.amountTextView.text = "$0"
             }
         }
 
@@ -83,7 +96,7 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
                         "MERCHANT COPY" -> {
                             // Should be stored internally for POS reference
                             //ToDo inject this
-                            val gson = Gson()
+                            val gson = GsonBuilder().setPrettyPrinting().create()
                             val receiptJsonString = gson.toJson(receipt)
                             val receiptEntity = Receipt(receipts = receiptJsonString)
                             lifecycleScope.launch(Dispatchers.IO) {
@@ -103,8 +116,6 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
         val cards = convertXMLToDataClass(requireContext())
         // Pick a random card from the list of available cards.
         return cards.card[Random.nextInt(cards.card.size)]
-        // Test with MAG_STRIPE
-        //return cards.card[cards.card.size-1]
     }
 
     // Comma implementation
@@ -147,9 +158,13 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
      * Update new entered amount if it is valid.
      */
     private fun updateAmount(newAmountText: String) {
-        val newAmount = if (newAmountText.isEmpty()) 0.0 else java.lang.Double.parseDouble(newAmountText.replace(",".toRegex(), "."))
+        val newAmount =
+            if (newAmountText.isEmpty()) 0.0 else java.lang.Double.parseDouble(newAmountText.replace(
+                ",".toRegex(),
+                "."))
         if (newAmount in 0.0..MAX_ALLOWED_AMOUNT
-            && getNumDecimals(newAmountText) <= MAX_ALLOWED_DECIMALS) {
+            && getNumDecimals(newAmountText) <= MAX_ALLOWED_DECIMALS
+        ) {
             amountText = newAmountText
             amount = newAmount
             showAmount(amountText)

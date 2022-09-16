@@ -21,11 +21,11 @@ data class SecurityCheck(
 )
 
 data class CustomerAccount(
-    @SerializedName("cardType") var cardType: String? = null,
-    @SerializedName("cardholderName") var cardholderName: String? = null,
-    @SerializedName("maskedPan") var maskedPan: String? = null,
-    @SerializedName("expiryDate") var expiryDate: String? = null,
-    @SerializedName("entryMethod") var entryMethod: String? = null,
+    @SerializedName("cardType") var cardType: String,
+    @SerializedName("cardholderName") var cardholderName: String,
+    @SerializedName("maskedPan") var maskedPan: String,
+    @SerializedName("expiryDate") var expiryDate: String,
+    @SerializedName("entryMethod") var entryMethod: String,
 )
 
 data class StoredPaymentCredentials(
@@ -60,29 +60,29 @@ data class EmvTags(
 )
 
 data class Receipts(
-    @SerializedName("copy") var copy: String? = null,
-    @SerializedName("header") var header: String? = null,
+    @SerializedName("copy") var copy: String,
+    @SerializedName("header") var header: String,
     @SerializedName("merchantDetails") var merchantDetails: ArrayList<MerchantDetails> = arrayListOf(),
     @SerializedName("transactionData") var transactionData: ArrayList<TransactionData> = arrayListOf(),
     @SerializedName("customFields") var customFields: ArrayList<String> = arrayListOf(),
     @SerializedName("iccData") var iccData: ArrayList<IccData> = arrayListOf(),
-    @SerializedName("footer") var footer: String? = null,
+    @SerializedName("footer") var footer: String,
 )
 
 data class IccData(
-    @SerializedName("order") var order: Int? = null,
-    @SerializedName("label") var label: String? = null,
-    @SerializedName("value") var value: String? = null,
+    @SerializedName("order") var order: Int,
+    @SerializedName("label") var label: String,
+    @SerializedName("value") var value: String,
 )
 
 data class TransactionData(
-    @SerializedName("order") var order: Int? = null,
-    @SerializedName("label") var label: String? = null,
-    @SerializedName("value") var value: String? = null,
+    @SerializedName("order") var order: Int,
+    @SerializedName("label") var label: String,
+    @SerializedName("value") var value: String,
 )
 
 data class MerchantDetails(
-    @SerializedName("order") var order: Int? = null,
-    @SerializedName("label") var label: String? = null,
-    @SerializedName("value") var value: String? = null,
+    @SerializedName("order") var order: Int,
+    @SerializedName("label") var label: String,
+    @SerializedName("value") var value: String,
 )

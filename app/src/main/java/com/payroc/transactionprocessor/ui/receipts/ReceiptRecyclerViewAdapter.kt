@@ -3,6 +3,8 @@ package com.payroc.transactionprocessor.ui.receipts
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.payroc.transaction.data.model.response.Receipts
 import com.payroc.transactionprocessor.database.entities.Receipt
 import com.payroc.transactionprocessor.databinding.ReceiptViewBinding
 

@@ -6,8 +6,7 @@ import com.payroc.transaction.data.model.request.Device
 sealed class CustomerAccount {
     data class EMVCustomerAccount(
         var device: Device,
-        var tlv: String? = null,
-        //var tags: ArrayList<EMVTags>,
+        var tlv: String,
         var payloadType: String
     ) : CustomerAccount()
 
