@@ -32,11 +32,6 @@ class HomeActivity : AppCompatActivity() {
             }
             true
         }
-
-        binding.bottomNavigationView.getOrCreateBadge(R.id.menu_item_receipts).apply {
-            number = 10
-            isVisible = true
-        }
     }
 
     private fun setCurrentFragment(fragment: Fragment) =

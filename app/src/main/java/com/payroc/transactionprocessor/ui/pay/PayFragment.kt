@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.davidmiguel.numberkeyboard.NumberKeyboardListener
-import com.google.gson.Gson
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.GsonBuilder
 import com.payroc.transaction.TransactionState
 import com.payroc.transaction.data.model.Card
@@ -23,8 +23,12 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import kotlin.random.Random
 
+
 @AndroidEntryPoint
-class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
+class PayFragment : Fragment(R.layout.fragment_pay),
+    NumberKeyboardListener {
+
+    private lateinit var navBar: BottomNavigationView
 
     private lateinit var binding: FragmentPayBinding
 
@@ -47,6 +51,8 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
         payViewModel = ViewModelProvider(this)[PayViewModel::class.java]
         binding.paymentEntryDialpad.setListener(this)
 
+        navBar = requireActivity().findViewById(R.id.bottomNavigationView)
+
         subscribeToObservables()
 
         binding.payButtonId.setOnClickListener {
@@ -66,17 +72,30 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
         payViewModel.getState().observe(viewLifecycleOwner) { state ->
             Timber.i("State :: $state")
             binding.stateTextView.text = state.toString()
-            if (state == TransactionState.CARD_REQUEST) {
-                //ToDo pop up dialog to provide / tap card
-                lifecycleScope.launch(Dispatchers.Main) {
-                    delay(2000)
-                    payViewModel.provideCard(getCard())
+
+            when (state) {
+                TransactionState.STARTED -> {
+                    binding.linearProgressIndicator.visibility = View.VISIBLE
                 }
-            } else if (state == TransactionState.COMPLETE) {
-                // Reset amount values
-                amountText = ""
-                amount = 0.0
-                binding.amountTextView.text = "$0"
+                TransactionState.COMPLETE -> {
+                    binding.linearProgressIndicator.visibility = View.INVISIBLE
+                    // Reset amount values
+                    amountText = ""
+                    amount = 0.0
+                    binding.amountTextView.text = "$0"
+                }
+                TransactionState.ERROR -> {
+                    binding.linearProgressIndicator.visibility = View.INVISIBLE
+                }
+                else -> {
+                    if (state == TransactionState.CARD_REQUEST) {
+                        //ToDo pop up dialog to provide / tap card
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            delay(2000)
+                            payViewModel.provideCard(getCard())
+                        }
+                    }
+                }
             }
         }
 
@@ -108,6 +127,13 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
                         }
                     }
                 }
+            }
+        }
+
+        payViewModel.allReceipts.observe(viewLifecycleOwner) { receiptList ->
+            navBar.getOrCreateBadge(R.id.menu_item_receipts).apply {
+                number = receiptList.size
+                isVisible = true
             }
         }
     }

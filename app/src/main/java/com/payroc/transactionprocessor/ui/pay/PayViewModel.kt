@@ -1,5 +1,6 @@
 package com.payroc.transactionprocessor.ui.pay
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.payroc.transaction.PayrocClient
@@ -12,6 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PayViewModel  @Inject constructor(private val receiptRepository: ReceiptRepository) : ViewModel() {
+
+    internal val allReceipts: LiveData<List<Receipt>> = receiptRepository.getReceipts()
 
     //ToDo API key should be in a properties file that needs to be added each clone
     private val payrocClient: PayrocClient = PayrocClient("5140001",
