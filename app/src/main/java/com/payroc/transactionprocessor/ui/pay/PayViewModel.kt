@@ -28,9 +28,6 @@ class PayViewModel  @Inject constructor(private val receiptRepository: ReceiptRe
         payrocClient.readCardData(card)
     }
 
-    /**
-     * Launching a new coroutine to insert the data in a non-blocking way
-     */
     suspend fun insertReceipt(receipt: Receipt) = viewModelScope.launch {
         receiptRepository.insertReceipt(receipt)
     }

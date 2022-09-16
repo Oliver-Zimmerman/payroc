@@ -34,6 +34,8 @@ class PayFragment : Fragment(R.layout.fragment_pay),
 
     private lateinit var payViewModel: PayViewModel
 
+    private val gson = GsonBuilder().setPrettyPrinting().create()
+
     private var amountText: String = ""
     private var amount: Double = 0.0
 
@@ -62,8 +64,7 @@ class PayFragment : Fragment(R.layout.fragment_pay),
 
     override fun onDestroyView() {
         // Reset amount values
-        amountText = ""
-        amount = 0.0
+        resetAmountValues()
         super.onDestroyView()
     }
 
@@ -80,8 +81,7 @@ class PayFragment : Fragment(R.layout.fragment_pay),
                 TransactionState.COMPLETE -> {
                     binding.linearProgressIndicator.visibility = View.INVISIBLE
                     // Reset amount values
-                    amountText = ""
-                    amount = 0.0
+                    resetAmountValues()
                     binding.amountTextView.text = "$0"
                 }
                 TransactionState.ERROR -> {
@@ -114,8 +114,6 @@ class PayFragment : Fragment(R.layout.fragment_pay),
                     when (receipt.header) {
                         "MERCHANT COPY" -> {
                             // Should be stored internally for POS reference
-                            //ToDo inject this
-                            val gson = GsonBuilder().setPrettyPrinting().create()
                             val receiptJsonString = gson.toJson(receipt)
                             val receiptEntity = Receipt(receipts = receiptJsonString)
                             lifecycleScope.launch(Dispatchers.IO) {
@@ -138,10 +136,16 @@ class PayFragment : Fragment(R.layout.fragment_pay),
         }
     }
 
+    private fun resetAmountValues() {
+        amountText = ""
+        amount = 0.0
+    }
+
     private fun getCard(): Card {
         val cards = convertXMLToDataClass(requireContext())
         // Pick a random card from the list of available cards.
         return cards.card[Random.nextInt(cards.card.size)]
+        //return cards.card[cards.card.size-1]
     }
 
     // Comma implementation

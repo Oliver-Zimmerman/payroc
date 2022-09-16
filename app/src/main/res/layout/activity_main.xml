@@ -22,74 +22,7 @@
       android:layout_height="75dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.5"
       app:layout_constraintStart_toStartOf="parent"
       app:menu="@menu/bottom_nav_menu" />
-
-  <!--  <TextView
-        android:id="@+id/state_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:text = "IDLE"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="HardcodedText" />
-
-    <TextView
-        android:id="@+id/client_message_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:text = ""
-        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/state_text_view"
-        tools:ignore="HardcodedText" />
-
-    <EditText
-        android:id="@+id/amount_edit_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_medium"
-        android:hint="@string/amount"
-        android:inputType="numberDecimal"
-        android:minHeight="48dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toTopOf="@+id/client_message_text_view" />
-
-    <Button
-        android:id="@+id/pay_button_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_tiny"
-        android:text="@string/pay"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-        app:layout_constraintStart_toEndOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/amount_edit_text"
-        />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/guideline_start" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="387dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/guideline_bottom" /> -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

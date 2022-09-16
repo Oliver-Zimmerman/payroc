@@ -97,7 +97,8 @@ class Transaction(
                 transactionListener.clientMessageReceived("Transaction complete")
             }.onError {
                 transactionListener.updateState(TransactionState.ERROR)
-                transactionListener.clientMessageReceived("There was an error processing the payment")
+                // Delete this and implement enum
+                transactionListener.clientMessageReceived("${this.statusCode.code} : There was an error processing the payment")
                 Log.e(TAG, message())
             }.onException {
                 transactionListener.updateState(TransactionState.ERROR)
