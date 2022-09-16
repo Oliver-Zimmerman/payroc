@@ -102,8 +102,9 @@ class PayFragment : Fragment(R.layout.fragment_pay), NumberKeyboardListener {
     private fun getCard(): Card {
         val cards = convertXMLToDataClass(requireContext())
         // Pick a random card from the list of available cards.
-      //  return cards.card[Random.nextInt(cards.card.size)]
-        return cards.card[cards.card.size-1]
+        return cards.card[Random.nextInt(cards.card.size)]
+        // Test with MAG_STRIPE
+        //return cards.card[cards.card.size-1]
     }
 
     // Comma implementation
