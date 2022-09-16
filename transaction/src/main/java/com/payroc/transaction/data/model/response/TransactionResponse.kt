@@ -43,7 +43,7 @@ data class TransactionResult(
     @SerializedName("approvalCode") var approvalCode: String,
     @SerializedName("dateTime") var dateTime: String,
     @SerializedName("currency") var currency: String,
-    @SerializedName("authorizedAmount") var authorizedAmount: Int,
+    @SerializedName("authorizedAmount") var authorizedAmount: Double,
     @SerializedName("resultCode") var resultCode: String,
     @SerializedName("resultMessage") var resultMessage: String,
     @SerializedName("storedPaymentCredentials") var storedPaymentCredentials: StoredPaymentCredentials,
