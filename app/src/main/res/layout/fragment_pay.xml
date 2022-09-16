@@ -6,27 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeActivity">
 
-  <FrameLayout
-      android:id="@+id/frame_layout_fragment"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.5"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-
-  <com.google.android.material.bottomnavigation.BottomNavigationView
-      android:id="@+id/bottomNavigationView"
-      android:layout_width="match_parent"
-      android:layout_height="75dp"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.5"
-      app:layout_constraintStart_toStartOf="parent"
-      app:menu="@menu/bottom_nav_menu" />
-
-  <!--  <TextView
+   <TextView
         android:id="@+id/state_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -90,6 +70,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/guideline_bottom" /> -->
+        app:layout_constraintGuide_end="@dimen/guideline_bottom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.payroc.transactionprocessor.R
 
-class ReceiptsFragment : Fragment() {
+class ReceiptsFragment : Fragment(R.layout.fragment_receipts) {
 
     companion object {
         fun newInstance() = ReceiptsFragment()
