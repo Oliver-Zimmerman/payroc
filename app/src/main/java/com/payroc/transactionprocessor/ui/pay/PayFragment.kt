@@ -153,7 +153,7 @@ class PayFragment : Fragment(R.layout.fragment_pay),
             setMessage("Tap to proceed")
             setIcon(R.drawable.ic_home)
             setPositiveButton("Tap") { _, _ ->
-                lifecycleScope.launch(Dispatchers.Main) {
+                lifecycleScope.launch(Dispatchers.IO) {
                     payViewModel.provideCard(getCard())
 
                 }

@@ -46,25 +46,25 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
 
     fun startTransaction(amount: Double) {
         if (amount <= 0.0) {
-            stateLiveData.value = TransactionState.ERROR
-            clientMessageLiveData.value = "Invalid transaction amount"
+            stateLiveData.postValue(TransactionState.ERROR)
+            clientMessageLiveData.postValue("Invalid transaction amount")
         } else {
             transaction = Transaction(amount, terminal, apiKey, this)
-            stateLiveData.value = TransactionState.CARD_REQUEST
-            clientMessageLiveData.value = "Please provide card"
+            stateLiveData.postValue(TransactionState.CARD_REQUEST)
+            clientMessageLiveData.postValue("Please provide card")
         }
     }
 
     fun cancelTransaction() {
         if (stateLiveData.value == TransactionState.CARD_REQUEST) {
             transaction = null
-            stateLiveData.value = TransactionState.IDLE
-            clientMessageLiveData.value = "Transaction cancelled"
+            stateLiveData.postValue(TransactionState.IDLE)
+            clientMessageLiveData.postValue("Transaction cancelled")
         } else {
             transaction?.let {
-                clientMessageLiveData.value = "Transaction in invalid state. Unable to cancel"
+                clientMessageLiveData.postValue("Transaction in invalid state. Unable to cancel")
             } ?: run {
-                clientMessageLiveData.value = "No transaction to cancel"
+                clientMessageLiveData.postValue("No transaction to cancel")
             }
         }
 
@@ -76,35 +76,35 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
             transaction?.let {
                 transaction?.provideCard(card)
             } ?: run {
-                stateLiveData.value = TransactionState.ERROR
+                stateLiveData.postValue(TransactionState.ERROR)
                 Log.e(TAG, "No ongoing transaction")
-                clientMessageLiveData.value = "No ongoing transaction"
+                clientMessageLiveData.postValue("No ongoing transaction")
             }
         } else {
             Log.e(TAG, "No card required")
-            clientMessageLiveData.value = "No card required"
+            clientMessageLiveData.postValue("No card required")
         }
     }
 
     override fun updateState(state: TransactionState) {
         Log.i(TAG, "State Received :: $state")
-        stateLiveData.value = state
+        stateLiveData.postValue(state)
     }
 
     override fun clientMessageReceived(message: String) {
         Log.i(TAG, "Message Received :: $message")
-        clientMessageLiveData.value = message
+        clientMessageLiveData.postValue(message)
 
     }
 
     override fun clientErrorReceived(error: Error) {
         Log.i(TAG, "Error Received :: $error")
-        clientErrorLiveData.value = error
+        clientErrorLiveData.postValue(error)
     }
 
     override fun receiptReceived(receipts: ArrayList<Receipts>) {
         Log.i(TAG, "Receipts Received :: $receipts")
-        clientReceiptLiveData.value = receipts
+        clientReceiptLiveData.postValue(receipts)
     }
 }
 
