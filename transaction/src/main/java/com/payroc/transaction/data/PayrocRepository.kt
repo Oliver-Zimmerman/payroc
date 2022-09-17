@@ -9,10 +9,13 @@ import retrofit2.Response
 class PayrocRepository(private val webService: PayrocWebService = PayrocWebService()) {
 
     suspend fun authenticate(apiKey: String): Response<AuthenticateResponse> {
-         return webService.authenticate(apiKey)
+        return webService.authenticate(apiKey)
     }
 
-     suspend fun createTransaction(token: String, transactionRequest: TransactionRequest): Response<TransactionResponse> {
+    suspend fun createTransaction(
+        token: String,
+        transactionRequest: TransactionRequest,
+    ): Response<TransactionResponse> {
         return webService.createTransaction(token, transactionRequest)
     }
 

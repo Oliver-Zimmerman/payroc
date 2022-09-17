@@ -3,12 +3,10 @@ package com.payroc.transaction
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.JsonObject
 import com.payroc.transaction.data.model.Card
+import com.payroc.transaction.data.model.Error
 import com.payroc.transaction.data.model.response.Receipts
-import com.payroc.transaction.data.model.response.TransactionResponse
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+
 
 class PayrocClient(private val terminal: String, private val apiKey: String) : TransactionListener {
     companion object {

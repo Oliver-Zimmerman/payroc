@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PayViewModel  @Inject constructor(private val receiptRepository: ReceiptRepository) : ViewModel() {
+class PayViewModel @Inject constructor(private val receiptRepository: ReceiptRepository) :
+    ViewModel() {
 
     internal val allReceipts: LiveData<List<Receipt>> = receiptRepository.getReceipts()
 

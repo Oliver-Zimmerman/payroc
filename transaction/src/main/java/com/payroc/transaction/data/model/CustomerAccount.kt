@@ -7,12 +7,12 @@ sealed class CustomerAccount {
     data class EMVCustomerAccount(
         var device: Device,
         var tlv: String,
-        var payloadType: String
+        var payloadType: String,
     ) : CustomerAccount()
 
     data class MAGCustomerAccount(
         var payloadType: String,
         var cardholderName: String,
-        var cardDetails: CardDetails
+        var cardDetails: CardDetails,
     ) : CustomerAccount()
 }
