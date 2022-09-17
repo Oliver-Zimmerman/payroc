@@ -1,7 +1,7 @@
 package com.payroc.transaction
 
-import com.google.gson.JsonObject
 import com.payroc.transaction.data.model.response.Receipts
+import com.payroc.transaction.data.model.Error
 
 interface TransactionListener {
 

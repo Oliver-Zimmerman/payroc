@@ -7,6 +7,7 @@ import com.payroc.transaction.data.model.Card
 import com.payroc.transaction.data.model.CustomerAccount
 import com.payroc.transaction.data.model.Order
 import com.payroc.transaction.data.model.OrderBreakdown
+import com.payroc.transaction.data.model.Error
 import com.payroc.transaction.data.model.request.CardDetails
 import com.payroc.transaction.data.model.request.Device
 import com.payroc.transaction.data.model.request.TransactionRequest
@@ -138,26 +139,6 @@ class Transaction(
         Log.e(TAG, message)
     }
 }
-
-data class Error(
-    val debugIdentifier: String,
-    val details: ArrayList<ErrorDetail>,
-)
-
-data class ErrorDetail(
-    val errorCode: String,
-    val errorMessage: String,
-    val about: String?,
-    val source: ErrorSource?,
-)
-
-data class ErrorSource(
-    val location: String,
-    val resource: String?,
-    val property: String?,
-    val value: String?,
-    val expected: String?,
-)
 
 /**
  *
