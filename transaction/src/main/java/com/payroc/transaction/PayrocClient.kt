@@ -17,6 +17,7 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
 
     private val stateLiveData = MutableLiveData<TransactionState>()
     private val clientMessageLiveData = MutableLiveData<String>()
+    private val clientErrorLiveData = MutableLiveData<Error>()
     private val clientReceiptLiveData = MutableLiveData<ArrayList<Receipts>>()
 
     private var transaction: Transaction? = null
@@ -31,6 +32,11 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
      * Returns the most recent client message response in the form of LiveData
      */
     fun getClientMessageResponse(): LiveData<String> = clientMessageLiveData
+
+    /**
+     * Returns the most recent client error response in the form of LiveData
+     */
+    fun getClientErrorResponse(): LiveData<Error> = clientErrorLiveData
 
     /**
      * Returns the receipt as a result of a transaction in the form of LiveData
@@ -89,6 +95,11 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
         Log.i(TAG, "Message Received :: $message")
         clientMessageLiveData.value = message
 
+    }
+
+    override fun clientErrorReceived(error: Error) {
+        Log.i(TAG, "Error Received :: $error")
+        clientErrorLiveData.value = error
     }
 
     override fun receiptReceived(receipts: ArrayList<Receipts>) {

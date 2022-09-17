@@ -2,9 +2,11 @@ package com.payroc.transactionprocessor.ui.pay
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -35,7 +37,8 @@ class PayFragment : Fragment(R.layout.fragment_pay),
 
     private lateinit var payViewModel: PayViewModel
 
-    @Inject lateinit var gson: Gson
+    @Inject
+    lateinit var gson: Gson
 
     private var amountText: String = ""
     private var amount: Double = 0.0
@@ -100,6 +103,15 @@ class PayFragment : Fragment(R.layout.fragment_pay),
         payViewModel.getClientMessage().observe(viewLifecycleOwner) { message ->
             Timber.i("Message :: $message")
             binding.clientMessageTextView.text = message
+        }
+
+        payViewModel.getClientError().observe(viewLifecycleOwner) { error ->
+            Timber.i("Error :: $error")
+            Toast.makeText(
+                context,
+                error.details[0].errorMessage,
+                Toast.LENGTH_LONG
+            ).show()
         }
 
         // Client Receipt Observable

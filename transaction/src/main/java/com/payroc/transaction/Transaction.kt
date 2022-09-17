@@ -99,13 +99,29 @@ class Transaction(
                         call: Call<TransactionResponse>,
                         response: Response<TransactionResponse>,
                     ) {
-                        val message = Gson().fromJson(response.errorBody()?.string(), Error::class.java)
-                        Log.e(TAG, message.debugIdentifier)
+                        if (response.isSuccessful) {
+                            val apiResponse = response.body()
+                            transactionListener.updateState(TransactionState.COMPLETE)
+                            // A successful response will always include receipts (!!)
+                            transactionListener.receiptReceived(apiResponse!!.receipts)
+                            transactionListener.clientMessageReceived("Transaction complete")
+                        } else {
+                            transactionListener.updateState(TransactionState.ERROR)
+                            val error =
+                                Gson().fromJson(response.errorBody()?.string(), Error::class.java)
+                            transactionListener.clientErrorReceived(error)
+                            transactionListener.clientMessageReceived("There was an error processing the payment")
+                            error.details.forEach {
+                                Log.e(TAG, it.errorMessage)
+                            }
+                        }
                     }
 
                     override fun onFailure(call: Call<TransactionResponse>, t: Throwable) {
-                        val message = t
-                        Log.e(TAG, t.toString())
+                        transactionListener.updateState(TransactionState.ERROR)
+                        transactionListener.clientMessageReceived("There was an error processing the payment")
+                        val message = t.message ?: "Unknown exception thrown, please check logs"
+                        Log.e(TAG, message)
                     }
 
                 }

@@ -44,7 +44,7 @@ class PayrocWebService {
         token: String,
         transactionRequest: TransactionRequest,
     ): Call<TransactionResponse> {
-        return api.createTransaction("Bearer $token", transactionRequest)
+        return api.createTransaction("Bearer2 $token", transactionRequest)
     }
 
     interface PayrocService {

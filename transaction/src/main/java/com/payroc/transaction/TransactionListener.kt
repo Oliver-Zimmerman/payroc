@@ -16,6 +16,12 @@ interface TransactionListener {
      */
     fun clientMessageReceived(message: String)
 
+    /** Fires when an error is being emitted from the client
+     * @param error the message being emitted from the client
+     * @see [Error]
+     */
+    fun clientErrorReceived(error: Error)
+
     /** Fires once a receipt has been received as a result of a successful transaction
      * @param receipts the receipts section of the response provided by the transaction
      * @see [Receipts]

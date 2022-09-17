@@ -39,5 +39,7 @@ class PayViewModel  @Inject constructor(private val receiptRepository: ReceiptRe
 
     fun getClientMessage() = payrocClient.getClientMessageResponse()
 
+    fun getClientError() = payrocClient.getClientErrorResponse()
+
     fun getReceipt() = payrocClient.getClientReceiptResponse()
 }
