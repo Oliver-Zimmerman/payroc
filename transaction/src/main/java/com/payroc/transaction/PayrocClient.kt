@@ -72,7 +72,7 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
 
     suspend fun readCardData(card: Card) {
         if (stateLiveData.value == TransactionState.CARD_REQUEST) {
-            stateLiveData.value = TransactionState.STARTED
+            stateLiveData.postValue(TransactionState.STARTED)
             transaction?.let {
                 transaction?.provideCard(card)
             } ?: run {

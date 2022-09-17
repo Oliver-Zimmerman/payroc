@@ -11,6 +11,7 @@ import com.payroc.transaction.data.model.OrderBreakdown
 import com.payroc.transaction.data.model.request.CardDetails
 import com.payroc.transaction.data.model.request.Device
 import com.payroc.transaction.data.model.request.TransactionRequest
+import com.payroc.transaction.data.model.response.AuthenticateResponse
 import com.payroc.transaction.data.model.response.TransactionResponse
 import com.payroc.transaction.utility.createOrderID
 import com.payroc.transaction.utility.generateTlv
@@ -20,6 +21,7 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 class Transaction(
@@ -32,18 +34,32 @@ class Transaction(
         private val TAG = this::class.java.simpleName
     }
 
+    private val gson = Gson()
+
     private val _repository: PayrocRepository = PayrocRepository.getInstance()
 
     private suspend fun authenticate(apiKey: String): String? {
         var token: String? = null
-        val authResponse = _repository.authenticate(apiKey)
-        authResponse.onSuccess {
-            token = this.data.token
-        }.onError {
-            Log.e(TAG, message())
-            transactionListener.clientMessageReceived("There was an issue authenticating your client")
-        }.onException {
-            Log.e(TAG, message())
+        val response = _repository.authenticate(apiKey)
+        try {
+            if (response.isSuccessful) {
+                token = response.body()?.token
+            } else {
+                kotlin.runCatching {
+                    transactionListener.updateState(TransactionState.ERROR)
+                    val error =
+                        gson.fromJson(response.errorBody()?.string(), Error::class.java)
+                    transactionListener.clientErrorReceived(error)
+                    transactionListener.clientMessageReceived("There was an error processing the payment")
+                    error.details.forEach {
+                        Log.e(TAG, it.errorMessage)
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(TAG, e.message())
+        } catch (t: Throwable) {
+            notifyThrowableError(t)
         }
         return token
     }
@@ -93,62 +109,43 @@ class Transaction(
         }
         transactionListener.clientMessageReceived("Going online")
         transactionRequest?.let {
-            _repository.createTransaction(token, transactionRequest).enqueue(
-                object : Callback<TransactionResponse> {
-                    override fun onResponse(
-                        call: Call<TransactionResponse>,
-                        response: Response<TransactionResponse>,
-                    ) {
-                        if (response.isSuccessful) {
-                            val apiResponse = response.body()
-                            transactionListener.updateState(TransactionState.COMPLETE)
-                            // A successful response will always include receipts (!!)
-                            transactionListener.receiptReceived(apiResponse!!.receipts)
-                            transactionListener.clientMessageReceived("Transaction complete")
-                        } else {
-                            transactionListener.updateState(TransactionState.ERROR)
-                            val error =
-                                Gson().fromJson(response.errorBody()?.string(), Error::class.java)
-                            transactionListener.clientErrorReceived(error)
-                            transactionListener.clientMessageReceived("There was an error processing the payment")
-                            error.details.forEach {
-                                Log.e(TAG, it.errorMessage)
-                            }
+            val response = _repository.createTransaction(token, transactionRequest)
+            try {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+                    transactionListener.updateState(TransactionState.COMPLETE)
+                    // A successful response will always include receipts (!!)
+                    transactionListener.receiptReceived(apiResponse!!.receipts)
+                    transactionListener.clientMessageReceived("Transaction complete")
+                } else {
+                    kotlin.runCatching {
+                        transactionListener.updateState(TransactionState.ERROR)
+                        val error =
+                            gson.fromJson(response.errorBody()?.string(), Error::class.java)
+                        transactionListener.clientErrorReceived(error)
+                        transactionListener.clientMessageReceived("There was an error processing the payment")
+                        error.details.forEach {
+                            Log.e(TAG, it.errorMessage)
                         }
                     }
-
-                    override fun onFailure(call: Call<TransactionResponse>, t: Throwable) {
-                        transactionListener.updateState(TransactionState.ERROR)
-                        transactionListener.clientMessageReceived("There was an error processing the payment")
-                        val message = t.message ?: "Unknown exception thrown, please check logs"
-                        Log.e(TAG, message)
-                    }
-
                 }
-            )
-
-
-            /*  transactionListener.updateState(TransactionState.PROCESSING)
-              _repository.createTransaction(token, transactionRequest).onSuccess {
-                  val response = this.data
-                  transactionListener.updateState(TransactionState.COMPLETE)
-                  transactionListener.receiptReceived(response.receipts)
-                  transactionListener.clientMessageReceived("Transaction complete")
-              }.onError {
-                  transactionListener.updateState(TransactionState.ERROR)
-                  // Delete this and implement enum
-                  transactionListener.clientMessageReceived("${this.statusCode.code} : There was an error processing the payment")
-                  Log.e(TAG, message())
-              }.onException {
-                  transactionListener.updateState(TransactionState.ERROR)
-                  transactionListener.clientMessageReceived("There was an error processing the payment")
-                  Log.e(TAG, message())
-              }*/
+            } catch (e: HttpException) {
+                Log.e(TAG, e.message())
+            } catch (t: Throwable) {
+                notifyThrowableError(t)
+            }
         } ?: run {
             transactionListener.updateState(TransactionState.ERROR)
             transactionListener.clientMessageReceived("Unknown card type used")
             Log.e(TAG, "Unknown card type used")
         }
+    }
+
+    private fun notifyThrowableError(t: Throwable) {
+        transactionListener.updateState(TransactionState.ERROR)
+        transactionListener.clientMessageReceived("There was an error processing the payment")
+        val message = t.message ?: "Unknown exception thrown, please check logs"
+        Log.e(TAG, message)
     }
 }
 

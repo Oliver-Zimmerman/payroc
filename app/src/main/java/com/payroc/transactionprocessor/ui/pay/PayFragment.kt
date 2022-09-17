@@ -153,8 +153,9 @@ class PayFragment : Fragment(R.layout.fragment_pay),
             setMessage("Tap to proceed")
             setIcon(R.drawable.ic_home)
             setPositiveButton("Tap") { _, _ ->
-                CoroutineScope(Dispatchers.Main).launch {
+                lifecycleScope.launch(Dispatchers.Main) {
                     payViewModel.provideCard(getCard())
+
                 }
             }
             setNegativeButton("Cancel") { _, _ ->
