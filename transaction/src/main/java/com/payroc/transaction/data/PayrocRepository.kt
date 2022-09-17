@@ -5,6 +5,7 @@ import com.payroc.transaction.data.model.request.TransactionRequest
 import com.payroc.transaction.data.model.response.AuthenticateResponse
 import com.payroc.transaction.data.model.response.TransactionResponse
 import com.skydoves.sandwich.ApiResponse
+import retrofit2.Call
 
 // The class that gets the data from the server
 class PayrocRepository(private val webService: PayrocWebService = PayrocWebService()) {
@@ -13,7 +14,7 @@ class PayrocRepository(private val webService: PayrocWebService = PayrocWebServi
          return webService.authenticate(apiKey)
     }
 
-    suspend fun createTransaction(token: String, transactionRequest: TransactionRequest): ApiResponse<TransactionResponse> {
+     fun createTransaction(token: String, transactionRequest: TransactionRequest): Call<TransactionResponse> {
         return webService.createTransaction(token, transactionRequest)
     }
 

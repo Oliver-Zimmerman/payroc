@@ -11,12 +11,16 @@ import com.payroc.transaction.data.model.OrderBreakdown
 import com.payroc.transaction.data.model.request.CardDetails
 import com.payroc.transaction.data.model.request.Device
 import com.payroc.transaction.data.model.request.TransactionRequest
+import com.payroc.transaction.data.model.response.TransactionResponse
 import com.payroc.transaction.utility.createOrderID
 import com.payroc.transaction.utility.generateTlv
 import com.skydoves.sandwich.message
 import com.skydoves.sandwich.onError
 import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Transaction(
     private val amount: Double,
@@ -89,22 +93,41 @@ class Transaction(
         }
         transactionListener.clientMessageReceived("Going online")
         transactionRequest?.let {
-            transactionListener.updateState(TransactionState.PROCESSING)
-            _repository.createTransaction(token, transactionRequest).onSuccess {
-                val response = this.data
-                transactionListener.updateState(TransactionState.COMPLETE)
-                transactionListener.receiptReceived(response.receipts)
-                transactionListener.clientMessageReceived("Transaction complete")
-            }.onError {
-                transactionListener.updateState(TransactionState.ERROR)
-                // Delete this and implement enum
-                transactionListener.clientMessageReceived("${this.statusCode.code} : There was an error processing the payment")
-                Log.e(TAG, message())
-            }.onException {
-                transactionListener.updateState(TransactionState.ERROR)
-                transactionListener.clientMessageReceived("There was an error processing the payment")
-                Log.e(TAG, message())
-            }
+            _repository.createTransaction(token, transactionRequest).enqueue(
+                object : Callback<TransactionResponse> {
+                    override fun onResponse(
+                        call: Call<TransactionResponse>,
+                        response: Response<TransactionResponse>,
+                    ) {
+                        val message = Gson().fromJson(response.errorBody()?.string(), Error::class.java)
+                        Log.e(TAG, message.debugIdentifier)
+                    }
+
+                    override fun onFailure(call: Call<TransactionResponse>, t: Throwable) {
+                        val message = t
+                        Log.e(TAG, t.toString())
+                    }
+
+                }
+            )
+
+
+            /*  transactionListener.updateState(TransactionState.PROCESSING)
+              _repository.createTransaction(token, transactionRequest).onSuccess {
+                  val response = this.data
+                  transactionListener.updateState(TransactionState.COMPLETE)
+                  transactionListener.receiptReceived(response.receipts)
+                  transactionListener.clientMessageReceived("Transaction complete")
+              }.onError {
+                  transactionListener.updateState(TransactionState.ERROR)
+                  // Delete this and implement enum
+                  transactionListener.clientMessageReceived("${this.statusCode.code} : There was an error processing the payment")
+                  Log.e(TAG, message())
+              }.onException {
+                  transactionListener.updateState(TransactionState.ERROR)
+                  transactionListener.clientMessageReceived("There was an error processing the payment")
+                  Log.e(TAG, message())
+              }*/
         } ?: run {
             transactionListener.updateState(TransactionState.ERROR)
             transactionListener.clientMessageReceived("Unknown card type used")
@@ -112,6 +135,26 @@ class Transaction(
         }
     }
 }
+
+data class Error(
+    val debugIdentifier: String,
+    val details: ArrayList<ErrorDetail>,
+)
+
+data class ErrorDetail(
+    val errorCode: String,
+    val errorMessage: String,
+    val about: String?,
+    val source: ErrorSource?,
+)
+
+data class ErrorSource(
+    val location: String,
+    val resource: String?,
+    val property: String?,
+    val value: String?,
+    val expected: String?,
+)
 
 /**
  *

@@ -11,6 +11,7 @@ import com.skydoves.sandwich.onException
 import com.skydoves.sandwich.onSuccess
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -39,10 +40,10 @@ class PayrocWebService {
         return api.authenticate("Basic $apiKey")
     }
 
-    suspend fun createTransaction(
+     fun createTransaction(
         token: String,
         transactionRequest: TransactionRequest,
-    ): ApiResponse<TransactionResponse> {
+    ): Call<TransactionResponse> {
         return api.createTransaction("Bearer $token", transactionRequest)
     }
 
@@ -57,9 +58,9 @@ class PayrocWebService {
             "Content-Type: application/json",
         )
         @POST("transaction/payments")
-        suspend fun createTransaction(
+         fun createTransaction(
             @Header("Authorization") token: String,
             @Body transactionRequest: TransactionRequest,
-        ): ApiResponse<TransactionResponse>
+        ): Call<TransactionResponse>
     }
 }
