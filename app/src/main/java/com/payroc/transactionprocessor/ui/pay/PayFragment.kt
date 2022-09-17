@@ -2,7 +2,6 @@ package com.payroc.transactionprocessor.ui.pay
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ import com.payroc.transactionprocessor.database.entities.Receipt
 import com.payroc.transactionprocessor.databinding.FragmentPayBinding
 import com.payroc.transactionprocessor.utility.convertXMLToDataClass
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber

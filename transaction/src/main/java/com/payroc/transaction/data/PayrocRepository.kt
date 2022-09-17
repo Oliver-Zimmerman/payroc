@@ -1,11 +1,8 @@
 package com.payroc.transaction.data
 
-import com.google.gson.JsonObject
 import com.payroc.transaction.data.model.request.TransactionRequest
 import com.payroc.transaction.data.model.response.AuthenticateResponse
 import com.payroc.transaction.data.model.response.TransactionResponse
-import com.skydoves.sandwich.ApiResponse
-import retrofit2.Call
 import retrofit2.Response
 
 // The class that gets the data from the server

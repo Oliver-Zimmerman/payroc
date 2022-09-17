@@ -2,7 +2,6 @@ package com.payroc.transaction
 
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.payroc.transaction.data.PayrocRepository
 import com.payroc.transaction.data.model.Card
 import com.payroc.transaction.data.model.CustomerAccount
@@ -11,18 +10,9 @@ import com.payroc.transaction.data.model.OrderBreakdown
 import com.payroc.transaction.data.model.request.CardDetails
 import com.payroc.transaction.data.model.request.Device
 import com.payroc.transaction.data.model.request.TransactionRequest
-import com.payroc.transaction.data.model.response.AuthenticateResponse
-import com.payroc.transaction.data.model.response.TransactionResponse
 import com.payroc.transaction.utility.createOrderID
 import com.payroc.transaction.utility.generateTlv
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.HttpException
-import retrofit2.Response
 
 class Transaction(
     private val amount: Double,

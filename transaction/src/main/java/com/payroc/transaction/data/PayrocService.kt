@@ -1,17 +1,10 @@
 package com.payroc.transaction.data
 
-import com.google.gson.JsonObject
 import com.payroc.transaction.data.model.request.TransactionRequest
 import com.payroc.transaction.data.model.response.AuthenticateResponse
 import com.payroc.transaction.data.model.response.TransactionResponse
-import com.skydoves.sandwich.ApiResponse
-import com.skydoves.sandwich.adapters.ApiResponseCallAdapterFactory
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,7 +23,6 @@ class PayrocWebService {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://testpayments.worldnettps.com/merchant/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(ApiResponseCallAdapterFactory.create())
             .client(client)
             .build()
 
