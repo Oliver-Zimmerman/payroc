@@ -1,4 +1,4 @@
-name: Release
+name: Workflow Dispatch Unit Tests
 
 on:
   # Allows you to run this workflow manually from the Actions tab
