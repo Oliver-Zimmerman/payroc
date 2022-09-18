@@ -8,6 +8,13 @@ import com.payroc.transaction.data.model.Error
 import com.payroc.transaction.data.model.response.Receipts
 
 
+/**
+ * The PayrocClient class that can be used to create [Transaction] instances as well as emit Client
+ * events such as [Error], [TransactionState] and [Receipts] changes.
+ *
+ * @property terminal the terminal assigned to this application
+ * @property apiKey the API key to be used for authenticating calls
+ */
 class PayrocClient(private val terminal: String, private val apiKey: String) : TransactionListener {
     companion object {
         private val TAG = this::class.java.simpleName

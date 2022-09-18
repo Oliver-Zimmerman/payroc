@@ -5,7 +5,6 @@ import com.payroc.transaction.data.model.response.AuthenticateResponse
 import com.payroc.transaction.data.model.response.TransactionResponse
 import retrofit2.Response
 
-// The class that gets the data from the server
 class PayrocRepository(private val webService: PayrocWebService = PayrocWebService()) {
 
     suspend fun authenticate(apiKey: String): Response<AuthenticateResponse> {

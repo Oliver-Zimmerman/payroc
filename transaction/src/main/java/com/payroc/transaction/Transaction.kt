@@ -15,6 +15,14 @@ import com.payroc.transaction.utility.createOrderID
 import com.payroc.transaction.utility.generateTlv
 import retrofit2.HttpException
 
+/**
+ * The Transaction class that can be used to process and authenticate a Transaction created by [PayrocClient]
+ *
+ * @property amount the amount assigned to the transaction, to be debited to a provided card
+ * @property terminal the terminal assigned to [PayrocClient]
+ * @property apiKey the API key to be used for authenticating calls
+ * @property transactionListener the listener class to interface with [PayrocClient]
+ */
 class Transaction(
     private val amount: Double,
     private val terminal: String,
