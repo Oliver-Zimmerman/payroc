@@ -69,7 +69,7 @@ data class Card(
 
 ### Observing client events
 
-In order to handle various SDK events, you will need to listen for the various UI events. All SDK events are provided via LiveData which can be observed:
+In order to handle SDK events, you will need to listen for the various UI events. All SDK events are provided via LiveData which can be observed:
 
 ```kotlin
     fun getState() = payrocClient.getStateResponse()
