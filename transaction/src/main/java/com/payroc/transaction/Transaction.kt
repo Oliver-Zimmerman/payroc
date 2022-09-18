@@ -13,6 +13,7 @@ import com.payroc.transaction.data.model.request.Device
 import com.payroc.transaction.data.model.request.TransactionRequest
 import com.payroc.transaction.utility.createOrderID
 import com.payroc.transaction.utility.generateTlv
+import kotlinx.coroutines.delay
 import retrofit2.HttpException
 
 /**
@@ -95,6 +96,10 @@ class Transaction(
         val token = authenticate(apiKey)
         token?.let {
             transactionListener.updateState(TransactionState.READING)
+
+            // Note: This is an arbitrary delay added to simulate a long running card read...
+            delay(5000)
+
             buildTransactionRequest(token, card)
         } ?: run {
             transactionListener.updateState(TransactionState.ERROR)
@@ -176,6 +181,7 @@ class Transaction(
         transactionRequest: TransactionRequest,
     ) {
         transactionListener.clientMessageReceived("Going online")
+        transactionListener.updateState(TransactionState.PROCESSING)
         transactionRequest.let {
             val response = repository.createTransaction(token, transactionRequest)
             try {
