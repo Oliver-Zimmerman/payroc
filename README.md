@@ -3,6 +3,11 @@
 
 Enable Mag Stripe and EMV Card payments on Android :credit_card:
 
+<p align="center">
+   <img align="center" width="20%" height="20%" src="https://user-images.githubusercontent.com/9112652/190905411-5bf6f52f-2ab5-42d0-a853-17d802b2a24b.gif">
+</p>
+
+
 ## Project structure: 
 
 - **Transaction Module:** the actual transaction handler module, containing all SDK logic and unit tests
@@ -78,8 +83,59 @@ https://developers.worldnetpayments.com/apis/merchant/#operation/payment
 #### getClientReceiptResponse()
 Returns the receipt as a result of a transaction in the form of LiveData
 
+We can then use these methods to create an observer that listens for an events - in this example we assume the LiveData methods are within a ViewModel.
 
-<p align="center">
-   <img align="center" width="25%" height="25%" src="https://user-images.githubusercontent.com/9112652/190905411-5bf6f52f-2ab5-42d0-a853-17d802b2a24b.gif">
-</p>
+```kotlin
+ private fun subscribeToObservables() {
+        // State Observable
+        payViewModel.getState().observe(viewLifecycleOwner) { state ->
+            Timber.i("State :: $state")
+            // Handle updated state, update UI, show toast message etc. 
+        }
+
+        // Client Message Observable
+        payViewModel.getClientMessage().observe(viewLifecycleOwner) { message ->
+            Timber.i("Message :: $message")
+            // Handle received client message, update UI, show toast message etc.  
+            // These are generic messages provided by the SDK. 
+            // They can be ignored and custom messages can be used as a result of getState() and getClientError() if preferred
+        }
+
+        payViewModel.getClientError().observe(viewLifecycleOwner) { error ->
+            Timber.i("Error :: $error")
+            
+            // Error data class received (see above). Use data class and handle error. eg.
+            
+            Toast.makeText(
+                context,
+                error.details[0].errorMessage,
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        // Client Receipt Observable
+        payViewModel.getReceipt().observe(viewLifecycleOwner)
+        { receiptsArray ->
+            Timber.i("Receipt Received :: $receiptsArray")
+            
+            // Receipts received. Receipts will come in an ArrayList containing both the Merchant Copy as well as the Customer Copy
+            // You can handle these however you like. eg. 
+            
+            receiptsArray?.let { receipts ->
+                receipts.forEach { receipt ->
+                    when (receipt.header) {
+                        "MERCHANT COPY" -> {
+                           //ToDo store merchant copy in local DB
+                        }
+                        "CARDHOLDER COPY" -> {
+                            //ToDo print card holder copy for customer
+                        }
+                    }
+                }
+            }
+        }
+    }
+```
+
+
 
