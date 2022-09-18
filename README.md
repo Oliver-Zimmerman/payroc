@@ -178,5 +178,12 @@ We can then use these methods to create an observer that listens for an events -
     }
 ```
 
+ ## Testing
+ 
+ Unit tests have been created for the SDK module for both the [PayrocClient](https://github.com/Oliver-Zimmerman/payroc/blob/main/transaction/src/test/java/com/payroc/transaction/PayrocClientUnitTest.kt) and [Transaction](https://github.com/Oliver-Zimmerman/payroc/blob/main/transaction/src/test/java/com/payroc/transaction/TransactionUnitTest.kt) classes.
+ 
+ These Unit tests have been integrated with Github actions and can be run as a workflow [here](https://github.com/Oliver-Zimmerman/payroc/actions/workflows/dispatch_unit_tests.yml)
+
+
 
 
