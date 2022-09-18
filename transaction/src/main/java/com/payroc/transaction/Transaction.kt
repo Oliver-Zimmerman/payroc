@@ -96,6 +96,7 @@ class Transaction(
         val token = authenticate(apiKey)
         token?.let {
             transactionListener.updateState(TransactionState.READING)
+            transactionListener.clientMessageReceived("Reading provided card")
 
             // Note: This is an arbitrary delay added to simulate a long running card read...
             delay(5000)
