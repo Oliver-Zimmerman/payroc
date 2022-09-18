@@ -103,6 +103,7 @@ class PayFragment : Fragment(R.layout.fragment_pay),
             binding.clientMessageTextView.text = message
         }
 
+        // Client Error Observable
         payViewModel.getClientError().observe(viewLifecycleOwner) { error ->
             Timber.i("Error :: $error")
             Toast.makeText(
