@@ -27,7 +27,7 @@ class Transaction(
 
     private val gson = Gson()
 
-    private val _repository: PayrocRepository = PayrocRepository.getInstance()
+    private val repository: PayrocRepository = PayrocRepository.getInstance()
 
     /**
      * Authenticate with the provided API Key in order to generate a Bearer Token for subsequent calls.
@@ -46,7 +46,7 @@ class Transaction(
      */
     private suspend fun authenticate(apiKey: String): String? {
         var token: String? = null
-        val response = _repository.authenticate(apiKey)
+        val response = repository.authenticate(apiKey)
         try {
             if (response.isSuccessful) {
                 token = response.body()?.token
@@ -169,7 +169,7 @@ class Transaction(
     ) {
         transactionListener.clientMessageReceived("Going online")
         transactionRequest.let {
-            val response = _repository.createTransaction(token, transactionRequest)
+            val response = repository.createTransaction(token, transactionRequest)
             try {
                 if (response.isSuccessful) {
                     val apiResponse = response.body()
