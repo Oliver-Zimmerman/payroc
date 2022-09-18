@@ -55,7 +55,6 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
 
     fun cancelTransaction() {
         if (stateLiveData.value == TransactionState.CARD_REQUEST) {
-            transaction = null
             stateLiveData.postValue(TransactionState.IDLE)
             clientMessageLiveData.postValue("Transaction cancelled")
         } else {
@@ -87,6 +86,10 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
     override fun updateState(state: TransactionState) {
         Log.i(TAG, "State Received :: $state")
         stateLiveData.postValue(state)
+        // clear current transaction
+        if (state == TransactionState.IDLE || state == TransactionState.COMPLETE || state == TransactionState.ERROR) {
+            transaction = null
+        }
     }
 
     override fun clientMessageReceived(message: String) {
