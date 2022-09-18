@@ -21,7 +21,7 @@ Enable Mag Stripe and EMV Card payments on Android :credit_card:
  
  ### Payroc Client
  
-To initialize the PayRoc client tou will need to provide a terminal String value, as well as your apiKey String. Once an instance is created, you will be able to create and cancel transactions as well as receive event updates. 
+To initialize the PayRoc client you will need to provide a terminal String value, as well as your apiKey String. Once an instance is created, you will be able to create and cancel transactions as well as receive event updates. 
 
 #### Starting a transaction
 
@@ -160,7 +160,7 @@ data class Receipts(
 )
 ```
 
-We can then use these methods to create an observer that listens for an events - in this example we assume the LiveData methods are within a ViewModel.
+We can then use these methods to create an observer that listens for events - in this example we assume the LiveData methods are within a ViewModel.
 
 ```kotlin
  private fun subscribeToObservables() {
