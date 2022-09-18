@@ -65,7 +65,7 @@ data class Card(
     var encryptedData: String? = null,
 )
 ```
-**Note:** For the purpose of this sample app, we are parsing an XML file with stored card data. This is not a likely real life use case...
+**Note:** For the purpose of this sample app, we are parsing an XML file with stored card data. This is not a likely real life use case.
 
 ### Observing client events
 
