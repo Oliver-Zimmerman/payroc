@@ -49,9 +49,6 @@ internal fun hexToBinary(hex: String): String {
 internal fun generateTlv(card: Card): String {
 
     val stringBuilder = StringBuilder()
-    // Step 1, convert Hex value to binary string
-    // Step 2, get the length of the binary string
-    // Step 3, divide binary string by 8 which is the bytes
     card.tags?.forEach { tag ->
         val bin = hexToBinary(tag.value)
         val hex = Integer.toHexString(bin.length / 8)
