@@ -56,12 +56,14 @@ Once a Transaction is created with a specified amount, the client state will go 
 A Card is a data class provided by the SDK that specifies the required fields for handling a transaction
 
 ```kotlin
+data class Card(
     var payloadType: String,
     var dataKsn: String,
     var tags: ArrayList<Tags>? = null,
     var cardholdername: String? = null,
     var serialNumber: String? = null,
     var encryptedData: String? = null,
+)
 ```
 **Note:** For the purpose of this sample app, we are parsing an XML file with stored card data. This is not a likely real life use case...
 
