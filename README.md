@@ -28,7 +28,7 @@ To initialize the PayRoc client you will need to provide a terminal String value
 To start a transaction, you simply need to provide an amount in the form of a Double
 
 ```kotlin
-  payrocClient = PayrocClient("5140001", "<Your API Key>")
+  val payrocClient = PayrocClient("5140001", "<Your API Key>")
   payrocClient.startTransaction(50.80)
 ```
 
