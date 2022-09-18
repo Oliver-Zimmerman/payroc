@@ -42,6 +42,19 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
      */
     fun getClientReceiptResponse(): LiveData<ArrayList<Receipts>> = clientReceiptLiveData
 
+    /**
+     * Creates a transaction with the specified amount - checking if the amount is valid first
+     * A valid amount is a double value greater than 0.00.
+     *
+     * In the case of a valid amount, an instance of [Transaction] is created and [TransactionState]
+     * will update to [TransactionState.CARD_REQUEST] - implying a card should now be provided to
+     * continue.
+     *
+     * If the amount is invalid, [TransactionState] will update to [TransactionState.ERROR]
+     *
+     * @param amount the transaction amount to be processed.
+     * @see [Transaction]
+     */
     fun startTransaction(amount: Double) {
         if (amount <= 0.0) {
             stateLiveData.postValue(TransactionState.ERROR)
@@ -53,6 +66,15 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
         }
     }
 
+    /**
+     * Cancels an ongoing transaction.
+     *
+     * A Transaction can only be cancelled when there is an ongoing [Transaction] and
+     * [TransactionState] is [TransactionState.CARD_REQUEST] otherwise an error message will be
+     * provided via the [getClientMessageResponse] LiveData
+     *
+     * @see [TransactionState]
+     */
     fun cancelTransaction() {
         if (stateLiveData.value == TransactionState.CARD_REQUEST) {
             stateLiveData.postValue(TransactionState.IDLE)
@@ -67,6 +89,17 @@ class PayrocClient(private val terminal: String, private val apiKey: String) : T
 
     }
 
+    /**
+     * Reads the data off of a provided [Card] in order to process an ongoing [Transaction].
+     * A card will only be processed if there is an ongoing [Transaction] and [TransactionState] is
+     * [TransactionState.CARD_REQUEST], otherwise a error will be provided.
+     *
+     * If there is an ongoing [Transaction] and [TransactionState] is correct, the [Transaction.provideCard]
+     * method will be called, which begins the authentication and transaction handling process.
+     *
+     * @param card the card that will be used to debit the amount specified when creating a [Transaction]
+     * @see [Transaction.provideCard]
+     */
     suspend fun readCardData(card: Card) {
         if (stateLiveData.value == TransactionState.CARD_REQUEST) {
             stateLiveData.postValue(TransactionState.STARTED)
