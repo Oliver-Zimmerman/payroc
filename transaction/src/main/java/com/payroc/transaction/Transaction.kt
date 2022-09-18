@@ -92,7 +92,7 @@ class Transaction(
      *
      * @param card the card that will be used to debit the amount specified when creating a [Transaction]
      */
-    suspend fun provideCard(card: Card) {
+    internal suspend fun provideCard(card: Card) {
         val token = authenticate(apiKey)
         token?.let {
             transactionListener.updateState(TransactionState.READING)
