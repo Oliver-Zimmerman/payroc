@@ -47,6 +47,32 @@ In order to handle various SDK events, you will need to listen for the various U
 #### getState()
 Returns the current SDK State response in the form of LiveData
 
+State is represented by an enum provided by the SDK:
+
+```kotlin
+/**
+ *
+ * Enum class to represent the different Transaction States that a transaction can be in.
+ *
+ * @property IDLE idle state, no transaction is being handled
+ * @property STARTED a transaction has been started, the amount has been provided
+ * @property CARD_REQUEST the client is waiting for a card to process the transaction
+ * @property READING a card has been provided and the information is being read
+ * @property PROCESSING the client is processing the transaction with the provided amount and card details
+ * @property COMPLETE a transaction has successfully completed
+ * @property ERROR an error has occurred
+ */
+enum class TransactionState {
+    IDLE,
+    STARTED,
+    CARD_REQUEST,
+    READING,
+    PROCESSING,
+    COMPLETE,
+    ERROR
+}
+```
+
 #### getClientMessage()
 Returns the most recent client message response in the form of LiveData
 
@@ -82,6 +108,20 @@ https://developers.worldnetpayments.com/apis/merchant/#operation/payment
 
 #### getClientReceiptResponse()
 Returns the receipt as a result of a transaction in the form of LiveData
+
+Receipts is a data class provided by the SDK:
+
+```kotlin
+data class Receipts(
+    var copy: String,
+    var header: String,
+    var merchantDetails: ArrayList<MerchantDetails> = arrayListOf(),
+    var transactionData: ArrayList<TransactionData> = arrayListOf(),
+    var customFields: ArrayList<String> = arrayListOf(),
+    var iccData: ArrayList<IccData> = arrayListOf(),
+    var footer: String,
+)
+```
 
 We can then use these methods to create an observer that listens for an events - in this example we assume the LiveData methods are within a ViewModel.
 
