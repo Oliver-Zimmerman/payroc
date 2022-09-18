@@ -23,12 +23,47 @@ Enable Mag Stripe and EMV Card payments on Android :credit_card:
  
 To initialize the PayRoc client tou will need to provide a terminal String value, as well as your apiKey String. Once an instance is created, you will be able to create and cancel transactions as well as receive event updates. 
 
+#### Starting a transaction
+
+To start a transaction, you simply need to provide an amount in the form of a Double
+
 ```kotlin
   payrocClient = PayrocClient("5140001", "<Your API Key>")
   payrocClient.startTransaction(50.80)
 ```
 
 Starting a transaction will create an instance of the Transaction class which will handle all transaction related processes. Only one transaction can be handled at a time. 
+
+
+#### Cancelling a transaction
+
+A transaction can be cancelled by calling 
+
+```kotlin
+  payrocClient.cancelTransaction()
+```
+
+It is important to note that a transaction can only be cancelled when it is in the CARD_REQUEST state. An error will be emitted otherwise. 
+
+#### Provide Card Data
+
+Once a Transaction is created with a specified amount, the client state will go into CARD_REQUEST state. When the client is in this state, a payment card can be provided by calling the readCardData method. 
+
+```kotlin
+  payrocClient.readCardData(card)
+```
+
+A Card is a data class provided by the SDK that specifies the required fields for handling a transaction
+
+```kotlin
+    var payloadType: String,
+    var dataKsn: String,
+    var tags: ArrayList<Tags>? = null,
+    var cardholdername: String? = null,
+    var serialNumber: String? = null,
+    var encryptedData: String? = null,
+```
+**Note:** For the purpose of this sample app, we are parsing an XML file with stored card data. This is not a likely real life use case...
 
 ### Observing client events
 
