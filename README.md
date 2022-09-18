@@ -21,7 +21,7 @@ Enable Mag Stripe and EMV Card payments on Android :credit_card:
  
  ### Payroc Client
  
-To initialize the PayRoc client you will need to provide a terminal String value, as well as your apiKey String. Once an instance is created, you will be able to create and cancel transactions as well as receive event updates. 
+To initialize the Payroc client you will need to provide a terminal String value, as well as your apiKey String. Once an instance is created, you will be able to create and cancel transactions as well as receive event updates. 
 
 #### Starting a transaction
 
