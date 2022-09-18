@@ -100,7 +100,8 @@ We can then use these methods to create an observer that listens for an events -
             // These are generic messages provided by the SDK. 
             // They can be ignored and custom messages can be used as a result of getState() and getClientError() if preferred
         }
-
+        
+        // Client Error Observable
         payViewModel.getClientError().observe(viewLifecycleOwner) { error ->
             Timber.i("Error :: $error")
             
