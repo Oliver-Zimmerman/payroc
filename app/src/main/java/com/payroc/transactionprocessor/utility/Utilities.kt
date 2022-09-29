@@ -9,7 +9,6 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import timber.log.Timber
 
 internal fun convertXMLToDataClass(context: Context): Cards {
-    Timber.i("filepath :: ${context.filesDir.path}")
     val file = context.resources.openRawResource(R.raw.card_data)
     val xmlToJson = XmlToJson.Builder(file, null).build()
     file.close()

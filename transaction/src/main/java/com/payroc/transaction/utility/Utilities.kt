@@ -1,7 +1,6 @@
 package com.payroc.transaction.utility
 
 import com.payroc.transaction.data.model.Card
-import java.lang.StringBuilder
 import java.math.BigInteger
 
 /**

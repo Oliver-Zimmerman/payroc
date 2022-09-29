@@ -35,11 +35,7 @@ class ReceiptRecyclerViewAdapter(val receipts: List<Receipt>) :
     }
 
     override fun onBindViewHolder(holder: ReceiptViewHolder, position: Int) {
-
-        //ToDo loop through merchantDetails and transactionData, create new textView and add view to linear layout
-
         val receipt = receipts[position].receipts
-        val gson = Gson()
         val receiptData = gson.fromJson(receipt, Receipts::class.java)
 
         receiptData.merchantDetails.forEach { merchantDetails ->

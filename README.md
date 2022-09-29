@@ -3,6 +3,8 @@
 
 Enable Mag Stripe and EMV Card payments on Android :credit_card:
 
+Created using the Merchant API provided [Worldnet Payments](https://developers.worldnetpayments.com/apis/merchant/)
+
 <p align="center">
    <img align="center" width="20%" height="20%" src="https://user-images.githubusercontent.com/9112652/190905411-5bf6f52f-2ab5-42d0-a853-17d802b2a24b.gif">
 </p>
